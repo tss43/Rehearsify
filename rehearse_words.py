@@ -1,7 +1,7 @@
 import sys
 import pandas as pd
 
-from file_handling import scan_dictionaries, read_words, read_score_df, save_score_df
+from file_handling import scan_dictionaries, read_score_df, save_score_df
 from select_word import select_random_weighted_word
 from answer_handling import check_answer, update_score_df
 
@@ -16,7 +16,7 @@ def rehearse(to_language='Spanish', from_language='English'):
         raise TypeError("to-from languages should be strings")
     if (to_language, from_language) not in available_dictionaries:
         raise ValueError(f"to-from language combination should be any of {available_dictionaries}")
-    print("Welcome to Rehearsify, a script for practising foreign language words!\n")
+    print("Welcome to Rehearsify, a programme for practising foreign language words!\n")
 
     # read in score df for dictionary of specified languages
     score_df = read_score_df( to_language, from_language )
@@ -40,5 +40,7 @@ def rehearse(to_language='Spanish', from_language='English'):
 
 if __name__ == "__main__":
     argc=len(sys.argv) 
-    if argc not in [1,3]: raise IndexError( "can only give none or exactly two arguments from command line" )
-    else: rehearse( *sys.argv[1:] )
+    if argc not in [1,3]: 
+        raise IndexError("can only give none or exactly two arguments from command line")
+    else: 
+        rehearse( *sys.argv[1:] )
