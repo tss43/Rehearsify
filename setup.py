@@ -1,0 +1,16 @@
+# setup.py
+""" setup.py is used by pip to install the package. """
+
+import setuptools
+
+setuptools.setup(
+    name="Rehearsify",
+    version="1.0.0",
+    description="Programme to rehearse words",
+    entry_points = {
+        'console_scripts': [
+            'Rehearse=command_line:script_rehearse',
+            'RemoveDuplicatess=command_line:script_remove_duplicates' ]},
+    packages=setuptools.find_packages('src'),
+    package_dir={'': 'src'}
+)
