@@ -1,15 +1,25 @@
+# main.py
+# to treat directory as executable 
+
+import os
 import sys
 import pandas as pd
 
-from file_handling import scan_available_language_pairs, read_score_df, create_score_df, save_score_df
-from select_word import select_random_weighted_word
-from answer_handling import check_answer, update_score_df
+from src.data_handling.file_handling import scan_available_language_pairs, read_score_df, create_score_df, save_score_df
+from src.question_posing.question_selecting import select_random_weighted_question
+from src.answer_handling.answer_handling import check_answer, update_score_df
+
+
+rehearsify_dir = os.path.dirname(__file__)
+dictionary_dir = os.path.join(rehearsify_dir, "Translation dictionaries")
+pickle_dir = os.path.join(rehearsify_dir, "Translation dictionaries", ".metadata", "Pickled dictionaries")
+
 
 def rehearse(to_language='Spanish', from_language='English'):
     """ Rehearse words from the dictionary specified by the user """
     
     # scan for available .txt dictionary files
-    available_language_pairs = scan_available_language_pairs()
+    available_language_pairs = scan_available_language_pairs(rehearsify_dir)
     # available_to_languages, available_from_languages = list( zip(*available_transl) ) 
 
     if not isinstance(to_language, str) or not isinstance(from_language, str):
@@ -18,14 +28,14 @@ def rehearse(to_language='Spanish', from_language='English'):
         raise ValueError(f"to-from language combination should be any of {available_language_pairs}")
     print("Welcome to Rehearsify, a programme for practising foreign language words!\n")
 
-    # read in pre-exiting score_df of specified languages, or create it from .txt dictionary file 
-    score_df = read_score_df( to_language, from_language ) or create_score_df( to_language, from_language )
+    # read in pre-exiting score_df of specified languages, or create it from .txt dictionary file if not available
+    score_df = read_score_df(pickle_dir, to_language, from_language) or create_score_df(dictionary_dir, to_language, from_language)
 
     # test words from specified dictionary. Exit upon 'q' or 'exit' user input
-    user_answer = None 
+    user_answer = ''
     while user_answer.lower() != 'q' or user_answer.lower() != 'exit':
 
-        correct_answer, question, n_correct, n_total = select_random_weighted_word( score_df )
+        correct_answer, question, n_correct, n_total = select_random_weighted_question( score_df )
         user_answer = input( f"{question} = " )
 
         # check answer and update score_df, and if found wrong display correct answer
@@ -39,9 +49,11 @@ def rehearse(to_language='Spanish', from_language='English'):
     # once the user has chosen to exit, save the dataframe
     save_score_df( score_df, to_language, from_language ) 
 
+# to enable executing module as script 
 if __name__ == "__main__":
-    argc=len(sys.argv) 
-    if argc not in [1,3]: 
+    args=sys.argv[1:]
+    argc=len(args) 
+    if argc not in [0,2]: 
         raise IndexError("can only give none or exactly two arguments from command line")
     else: 
-        rehearse( *sys.argv[1:] )
+        rehearse( *args )
