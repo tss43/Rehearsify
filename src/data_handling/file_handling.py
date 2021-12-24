@@ -1,3 +1,5 @@
+
+
 import os
 import pandas as pd
 
@@ -34,7 +36,7 @@ def create_score_df(dictionary_dir: str, to_language: str, from_language: str) -
     word_list = read_dictionary_txtfile(dictionary_dir, to_language, from_language )
     score_df = pd.DataFrame( word_list, columns=['question', 'answer'] )
 
-    zero_dict = dict.fromkeys( keys=['correct_perc', 'correct', 'total'], value=0 )
+    zero_dict = dict.fromkeys( keys=['wrong_perc', 'wrong', 'total'], value=0 )
     score_df.assign(**zero_dict)
 
     return score_df

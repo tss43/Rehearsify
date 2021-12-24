@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 
 from src.data_handling.file_handling import scan_available_language_pairs, read_score_df, create_score_df, save_score_df
-from src.question_posing.question_selecting import select_random_weighted_question
+from src.question_posing.question_selecting import select_randomly_weighed_question
 from src.answer_handling.answer_handling import check_answer, update_score_df
 
 
@@ -35,15 +35,15 @@ def rehearse(to_language='Spanish', from_language='English'):
     user_answer = ''
     while user_answer.lower() != 'q' or user_answer.lower() != 'exit':
 
-        correct_answer, question, n_correct, n_total = select_random_weighted_question( score_df )
+        correct_answer, question, n_wrong, n_total = select_randomly_weighed_question( score_df )
         user_answer = input( f"{question} = " )
 
         # check answer and update score_df, and if found wrong display correct answer
         answer_is_correct = check_answer( user_answer, correct_answer )
         if not answer_is_correct: 
-            print( f"\t xxx \t {correct_answer} \t\t score={n_correct}/{n_total+1}" )
+            print( f"\t xxx \t {correct_answer} \t\t score={n_wrong+1}/{n_total+1}" )
         else:
-            print( f"\t ooo \t {correct_answer} \t\t score={n_correct+1}/{n_total+1}" )
+            print( f"\t ooo \t {correct_answer} \t\t score={n_wrong}/{n_total+1}" )
         score_df = update_score_df( score_df, question, answer_is_correct )
     
     # once the user has chosen to exit, save the dataframe
