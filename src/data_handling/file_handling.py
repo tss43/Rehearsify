@@ -25,7 +25,7 @@ def read_score_df(pickle_dir: str, to_language: str, from_language: str) -> pd.D
         pickle_path = os.path.join( pickle_dir, pickle_file )
         score_df = pd.read_pickle( pickle_path ) 
     else:
-        score_df = pd.DataFrame()
+        score_df = pd.DataFrame( columns=['question', 'answer', 'wrong_perc', 'wrong', 'total'] )
     
     return score_df
     
@@ -38,7 +38,7 @@ def update_score_df(dictionary_dir: str, to_language: str, from_language: str, s
     
     unique_translations = set(word_list)
     unique_preloaded_translations = { tuple(translation) for translation in score_df[['question', 'answer']].to_numpy() }  
-    added_questions = unique_preloaded_translations-unique_translations
+    added_questions = unique_translations-unique_preloaded_translations
     
     added_df = pd.DataFrame( added_questions, columns=['question', 'answer'] )
     zero_dict = dict.fromkeys( ['wrong_perc', 'wrong', 'total'], 0 )
@@ -65,7 +65,7 @@ def read_dictionary_txtfile(dictionary_dir: str, lang1: str, lang2: str) -> list
         with open (os.path.join(dictionary_dir, dictionary_txtfile), 'r') as f:    
             word_list = f.read().splitlines()       
     
-        word_list = [ transl.split(' = ')[::-1] for transl in word_list if transl.strip() ]
+        word_list = [ tuple( transl.split(' = ')[::-1] ) for transl in word_list if transl.strip() ]
 
         # check that every translation contained exactly one '=', i.e. has both a to and from side
         if not all( len(split_transl)==2 for split_transl in word_list ):

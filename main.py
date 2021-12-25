@@ -46,7 +46,7 @@ def rehearse(to_language='Spanish', from_language='English'):
         print( f"\t {'ooo' if answer_is_correct else 'xxx'} \t {sample.question} = {sample.answer} \
             \t\t score={sample.wrong}/{sample.total}\n" )
 
-        # update score_df
+        # update score_df with new sample statistics
         score_df[ score_df['question']==sample.question ] = sample
     
     # once the user has chosen to exit, save the dataframe
