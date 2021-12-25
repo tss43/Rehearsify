@@ -2,6 +2,7 @@
 
 import string
 import re
+import unidecode 
 import pandas as pd
 
 
@@ -10,8 +11,9 @@ def check_answer(user_answer: str, correct_answer: str) -> bool:
 
     user_answer_exploded = explode_answer( user_answer )
     correct_answer_exploded = explode_answer( correct_answer )
-        
-    if any( u_ans in correct_answer_exploded for u_ans in user_answer_exploded ):
+
+    # count correct if intersection of exploded user answer set and exploded correct answer set is non-empty
+    if user_answer_exploded & correct_answer_exploded:
         return True
     else:
         return False
@@ -31,7 +33,7 @@ def update_sample( sample: pd.Series, answer_is_correct: bool ) -> pd.DataFrame:
 
 ### supportive functions
 
-def explode_answer( answer: str ) -> list:
+def explode_answer( answer: str ) -> set:
     """ Explode the given answer out to a list of possible constituent answers """
     
     # split the correct answer if it consists of multiple allowed options
@@ -39,7 +41,10 @@ def explode_answer( answer: str ) -> list:
     # also count as an answer ommitting any text in brackets and ignore punctuation/case in the user answer
     answer_explosion = answer_explosion + [ re.sub(r'\(.*?\)', '', ans) for ans \
         in answer_explosion if re.sub(r'\(.*?\)', '', ans) not in answer_explosion ] 
-    answer_explosion = [ ans.translate(str.maketrans('', '', string.punctuation)) for ans in answer_explosion ]
-    answer_explosion = [ ans.lower() for ans in answer_explosion ]
+    
+    # ignore special characters/punctuation/case
+    answer_explosion = { unidecode.unidecode(ans) for ans in answer_explosion }
+    answer_explosion = { ans.translate(str.maketrans('', '', string.punctuation)) for ans in answer_explosion }
+    answer_explosion = { ans.lower() for ans in answer_explosion }
     
     return answer_explosion
