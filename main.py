@@ -3,7 +3,6 @@
 
 import os
 import sys
-import pandas as pd
 
 from src.data_handling.file_handling import scan_available_language_pairs, read_score_df, update_score_df, save_score_df
 from src.question_posing.question_selecting import select_randomly_weighed_question
@@ -32,7 +31,6 @@ def rehearse(to_language='Spanish', from_language='English'):
     score_df = read_score_df(pickle_dir, to_language, from_language) 
     score_df = update_score_df(dictionary_dir, to_language, from_language, score_df)
     
-
     # test words from specified dictionary. Exit upon 'q' or 'exit' user input
     user_answer = ''
     while user_answer.lower() != 'q' or user_answer.lower() != 'exit':
@@ -61,4 +59,4 @@ if __name__ == "__main__":
     if argc not in [0,2]: 
         raise IndexError("can only give none or exactly two arguments from command line")
     else: 
-        rehearse( *args )
+        rehearse(*args)
