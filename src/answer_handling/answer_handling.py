@@ -31,7 +31,7 @@ def update_sample( sample: pd.Series, answer_is_correct: bool ) -> pd.DataFrame:
 
 
 
-### supportive functions
+### supporting functions ###
 
 def explode_answer( answer: str ) -> set:
     """ Explode the given answer out to a list of possible constituent answers """
