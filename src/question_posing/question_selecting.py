@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-def select_randomly_weighed_question( score_df ) -> pd.Series:
+def select_randomly_weighed_question( score_df: pd.DataFrame ) -> pd.Series:
     """ select a randomly selected word from the score df, weighted by percentage wrong if possible """
 
     if not score_df['total'].any():
@@ -15,6 +15,6 @@ def select_randomly_weighed_question( score_df ) -> pd.Series:
 
     return ( sample )
 
-def select_ML_word() -> pd.Series:
+def select_ML_question( score_df: pd.DataFrame ) -> pd.Series:
     """ FUNCTION DESCRIPTION """
     pass

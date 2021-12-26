@@ -1,5 +1,5 @@
 # main.py
-# to treat directory as executable 
+""" to treat directory as executable """
 
 import os
 import sys
