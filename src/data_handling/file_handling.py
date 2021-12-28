@@ -9,9 +9,9 @@ def scan_available_language_pairs(dictionary_dir: str) -> list:
     """ Return a list of available language combination tuples """
 
     transl_list = []
-    for language_dictionary in os.listdir( dictionary_dir ):
-        if language_dictionary.endswith("_dictionary.txt"):
-            transl_list.append( tuple(language_dictionary.split('_')[0:2]) )
+    for language_pair in os.listdir( dictionary_dir ):
+        if language_pair.endswith("_dictionary.txt"):
+            transl_list.append( tuple(language_pair.split('_')[0:2]) )
 
     return transl_list
 

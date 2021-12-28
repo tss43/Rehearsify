@@ -15,14 +15,17 @@ pickle_dir = os.path.join(rehearsify_dir, "support", ".metadata", "Pickled dicti
 
 
 def rehearse(to_language='Spanish', from_language='English'):
-    """ Rehearse words from the dictionary specified by the user """
+    """ Rehearse words from the dictionary specified by the user.
+    INPUTS: 
+        to_language: str (default: 'Spanish')
+        from_language: str (default: 'English) """
     
-    # scan for available .txt dictionary files
-    available_language_pairs = scan_available_language_pairs(dictionary_dir)
-    # available_to_languages, available_from_languages = list( zip(*available_transl) ) 
-
     if not isinstance(to_language, str) or not isinstance(from_language, str):
         raise TypeError("to-from languages should be strings")
+
+    # scan for available .txt dictionary files
+    available_language_pairs = scan_available_language_pairs(dictionary_dir)
+
     if (to_language, from_language) not in available_language_pairs:
         raise ValueError(f"to-from language combination should be any of {available_language_pairs}")
     print("Welcome to Rehearsify, a programme for practising foreign language words!\n")
