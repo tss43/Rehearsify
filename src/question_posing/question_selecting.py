@@ -16,5 +16,5 @@ def select_randomly_weighed_question( score_df: pd.DataFrame ) -> pd.Series:
     return ( sample )
 
 def select_ML_question( score_df: pd.DataFrame ) -> pd.Series:
-    """ FUNCTION DESCRIPTION """
+    """ DESCRIPTION """
     pass

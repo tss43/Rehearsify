@@ -38,9 +38,9 @@ def update_score_df(dictionary_dir: str, to_language: str, from_language: str, s
     
     unique_translations = set(word_list)
     unique_preloaded_translations = { tuple(translation) for translation in score_df[['question', 'answer']].to_numpy() }  
-    added_questions = unique_translations-unique_preloaded_translations
+    added_translations = unique_translations-unique_preloaded_translations
     
-    added_df = pd.DataFrame( added_questions, columns=['question', 'answer'] )
+    added_df = pd.DataFrame( added_translations, columns=['question', 'answer'] )
     zero_dict = dict.fromkeys( ['wrong_perc', 'wrong', 'total'], 0 )
     added_df = added_df.assign(**zero_dict)
 
