@@ -1,28 +1,40 @@
+# GUI_interacting/RehearsifyGUI.py
+
+# TO DO: 
+#   - remove duplicates
+#   - adding new translations
+
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+from tkinter.simpledialog import askstring
 
 import pandas as pd
 
+from src.data_handling.file_handling import read_dictionary_txtfile, save_as_dictionary_txtfile
 from src.question_posing.question_selecting import select_randomly_weighed_question
 from src.answer_handling.answer_handling import check_answer, update_sample
 from src.translation_handling.find_sample import find_sample_from_question, find_sample_from_answer
 
+
 MAX_LINES_DISPLAY = 5
 COLUMNS = ['question', 'answer', 'wrong_perc', 'wrong', 'total']
 
-class RehearsifyGUI:
-    
-    def __init__(self, window):
 
+class RehearsifyGUI:
+    """ Class defining the RehearsifyGUI. """
+
+    def __init__(self, window):
+        """ Initialise object with the following attributes. """
+
+        #instance attributes
+        self.window = window
         self.score_df = pd.DataFrame()
-        self.sample = pd.Series(['','',0,0,0], index=COLUMNS ) 
+        self.sample = pd.Series(['...','...',0,0,0], index=COLUMNS ) 
         self.question_text = tk.StringVar()
         self.question_text.set(self.sample.question)
         self.user_answer = ''
 
         # specify adaptive scaling behaviour of rows/columns
-        self.window = window
-        #window.geometry("360x180")
         window.title("Rehearsify - a language practising app")
         window.columnconfigure(0, minsize=50, weight=0)
         window.columnconfigure(1, minsize=100, weight=1)
@@ -46,10 +58,12 @@ class RehearsifyGUI:
 
         # place widgets on grid
         self.button_frame.grid(row=0, column=0, rowspan=2, sticky='NSEW')
+        self.button_frame.rowconfigure([0,1,3,4], weight=0)
+        self.button_frame.rowconfigure(2, minsize=25, weight=1)
         self.btn_open.grid(row=0, column=0, padx=5, pady=5)
         self.btn_save.grid(row=1, column=0, padx=5, pady=5)
-        self.btn_lookup_question.grid(row=2, column=0, padx=5, pady=5)
-        self.btn_lookup_answer.grid(row=3, column=0, padx=5, pady=5)
+        self.btn_lookup_question.grid(row=3, column=0, padx=5, pady=5)
+        self.btn_lookup_answer.grid(row=4, column=0, padx=5, pady=5)
 
         self.question_answer_frame.grid(row=0, column=1, sticky='NSEW')
         self.question_prompt.grid(row=0, column=0, sticky='NSEW', padx=3, pady=25)
@@ -58,36 +72,24 @@ class RehearsifyGUI:
 
         self.previous_rehearsed.grid(row=1, column=1, sticky='NSEW', padx=5, pady=5)
 
-    # object methods
+    #instance methods
     def open_file( self ):
-        """Open a file for editing."""
-        filepath = askopenfilename(
-            filetypes=[("Text Files", "*.txt"), ("Pickle Files", "*.pkl")]
-        )
+        """Open a dictionary file for practising."""
+        
+        filepath = askopenfilename( filetypes=[("Text Files", "*.txt"), ("Pickle Files", "*.pkl")] )
         if not filepath:
             return
-        
         elif filepath.endswith(".txt"):
-            with open(filepath, "r") as f:
-                word_list = f.read().splitlines()       
-            word_list = [ tuple( transl.split(' = ')[::-1] ) for transl in word_list if transl.strip() ]
-            
-            # check that every translation contained exactly one '=', i.e. has both a to and from side
-            if not all( len(split_transl)==2 for split_transl in word_list ):
-                raise ValueError("Some translations were incomplete!")
-            
-            self.score_df = pd.DataFrame( word_list, columns=COLUMNS[:2] )
-            zero_dict = dict.fromkeys( COLUMNS[2:], 0 )
-            self.score_df = self.score_df.assign(**zero_dict)
-
+            self.score_df = read_dictionary_txtfile( filepath )
         elif filepath.endswith(".pkl"):
             self.score_df = pd.read_pickle( filepath )
                     
-        # update prompt with newly selected question
+        # update prompt with first selected question
         self.sample = select_randomly_weighed_question( self.score_df )
         self.question_text.set(self.sample.question)
         
         self.window.title(f"Rehearsify - {filepath}")
+
 
     def save_file( self ):
         """Save the current file as a new file."""
@@ -97,7 +99,9 @@ class RehearsifyGUI:
         )
         if not filepath:
             return
-        else:
+        elif filepath.endswith(".txt"):
+            self.score_df = save_as_dictionary_txtfile( filepath )
+        elif filepath.endswith(".pkl"):
             self.score_df.to_pickle(filepath)
 
         self.window.title(f"Rehearsify - {filepath}")
@@ -119,28 +123,34 @@ class RehearsifyGUI:
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
         # update text widget of previously rehearsed questions
-        self.previous_rehearsed.insert(1.0, f"{self.sample.question} = { self.sample.answer} \
-            \t\t score={self.sample.total-self.sample.wrong}/{self.sample.total}\n")
+        self.previous_rehearsed.insert(1.0, f"score={self.sample.total-self.sample.wrong}/{self.sample.total}\
+            \t{self.sample.question} = { self.sample.answer}\n")
 
         # update prompt with newly selected question
         self.sample = select_randomly_weighed_question( self.score_df )
         self.question_text.set(self.sample.question)
 
 
-
     def lookup_question( self ):
         """Open new window with prompt for question for which the corresponding sample is then looked up."""
-        pass
 
-        ### DO WORK HERE
-        # find_sample_to_question
+        question = askstring( "Question lookup", "Question for which to find the sample:" )
+        self.sample = find_sample_from_question( self.score_df, question )
+
+         # update text widget of previously rehearsed questions
+        self.previous_rehearsed.insert(1.0, f"score={self.sample.total-self.sample.wrong}/{self.sample.total}\
+            \t{self.sample.question} = { self.sample.answer}\n")
+
 
     def lookup_answer( self ):
         """Open new window with prompt for answer for which the corresponding sample is then looked up."""
-        pass
 
-        ### DO WORK HERE
-        # find_sample_to_answer
+        answer = askstring( "Answer lookup", "Answer for which to find the sample:" )
+        self.sample = find_sample_from_answer( self.score_df, answer )
+
+         # update text widget of previously rehearsed questions
+        self.previous_rehearsed.insert(1.0, f"score={self.sample.total-self.sample.wrong}/{self.sample.total}\
+            \t{self.sample.question} = { self.sample.answer}\n")
 
 
 

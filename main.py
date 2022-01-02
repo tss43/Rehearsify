@@ -8,7 +8,7 @@ from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 def open_Rehearsify_GUI():
     """ DESCRIPTION """
     root = tk.Tk()
-    app = RehearsifyGUI(root) 
+    app = RehearsifyGUI(window=root) 
     root.mainloop()
 
 
