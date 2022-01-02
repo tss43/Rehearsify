@@ -27,8 +27,8 @@ def save_as_dictionary_txtfile(filepath: str, score_df: pd.DataFrame):
     """ Save the df as a dictionary txtfile. """
 
     n_translations = score_df.shape[0]
-    question_array = score_df['question'].values
-    answer_array = score_df['answer'].values
+    question_array = score_df['question'].to_numpy()
+    answer_array = score_df['answer'].to_numpy()
     eq_sign_list = [" = "]*n_translations
 
     with open(filepath, 'a+') as f:     
