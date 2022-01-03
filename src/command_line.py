@@ -5,8 +5,8 @@ import sys
 
 import pandas as pd
 
-from src.translation_handling.find_duplicates import find_duplicates
-from src.data_handling.file_handling import read_dictionary_txtfile
+from translation_handling.find_duplicates import find_duplicates
+from data_handling.file_handling import read_dictionary_txtfile
 
 
 def script_find_duplicates():
@@ -14,11 +14,12 @@ def script_find_duplicates():
     INPUTS: 
             dictionary_fpath: str """
 
-    if __name__ == "__main__":
+    if __name__ == "command_line":       
         args=sys.argv[1:]
         argc=len(args) 
+        print(f"{args}\n {argc}\n")
         if argc!=1: 
-            raise IndexError("Usage: find_duplicates(dictionary_fpath: str) -> list[str]")
+            raise IndexError("Usage: find_duplicates(dictionary_fpath: str) -> set[str]")
         else:
             dictionary_fpath = args[0]
             if not isinstance(dictionary_fpath, str):
@@ -32,4 +33,4 @@ def script_find_duplicates():
             
             duplicates_set = find_duplicates(score_df)
 
-            print(f"Duplicate entries are\n: {duplicates_set}")
+            print(f"Duplicate question entries are:\n {duplicates_set}")
