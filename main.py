@@ -6,7 +6,7 @@ import tkinter as tk
 from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 
 def open_Rehearsify_GUI():
-    """ DESCRIPTION """
+    """ Open the main Rehearsify GUI window. """
     root = tk.Tk()
     app = RehearsifyGUI(window=root) 
     root.mainloop()
