@@ -27,7 +27,7 @@ class RehearsifyGUI:
         #instance attributes
         self.window = window
         self.score_df = pd.DataFrame()
-        self.sample = pd.Series(['(question)','(input user answer)',0,0,0], index=COLUMNS ) 
+        self.sample = pd.Series(['(questions)','(user input answers)',0,0,0], index=COLUMNS ) 
         self.question = tk.StringVar( window, value=self.sample.question )
         self.user_answer = tk.StringVar( window, value=self.sample.answer )
 
@@ -42,8 +42,8 @@ class RehearsifyGUI:
         # define widgets
         self.button_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
         self.btn_open = tk.Button( self.button_frame, text="Open", command=self.open_file )
-        self.btn_update = tk.Button( self.button_frame, text="Update...", command=self.update_file )
-        self.btn_save = tk.Button( self.button_frame, text="Save As...", command=self.save_file )
+        self.btn_update = tk.Button( self.button_frame, text="Update with...", command=self.update_file )
+        self.btn_save = tk.Button( self.button_frame, text="Save as...", command=self.save_file )
         self.btn_lookup_question = tk.Button( self.button_frame, text="Lookup question", command=self.lookup_question )
         self.btn_lookup_answer = tk.Button( self.button_frame, text="Lookup answer", command=self.lookup_answer )
 
@@ -117,7 +117,7 @@ class RehearsifyGUI:
         if not filepath:
             return
         elif filepath.endswith(".txt"):
-            self.score_df = save_as_dictionary_txtfile( filepath )
+            save_as_dictionary_txtfile( filepath, self.score_df )
         elif filepath.endswith(".pkl"):
             self.score_df.to_pickle(filepath)
 
