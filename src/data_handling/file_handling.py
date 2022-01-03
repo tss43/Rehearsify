@@ -12,15 +12,15 @@ def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
     """ Read in the word list for the specified language combination into a df that is returned. """
 
     with open(filepath, 'r') as f:
-        word_list = f.read().splitlines()       
-    word_list = [ tuple( transl.split(' = ')[::-1] ) for transl in word_list if transl.strip() ]
+        translation_list = f.read().splitlines()       
+    translation_list = [ tuple( transl.split(' = ')[::-1] ) for transl in translation_list if transl.strip() ]
     
     # check that every translation contained exactly one '=', i.e. has both a to and from side
-    if not all( len(split_transl)==2 for split_transl in word_list ):
+    if not all( len(split_transl)==2 for split_transl in translation_list ):
         raise ValueError("Some translations were incomplete!")
     
     zero_dict = dict.fromkeys( COLUMNS[2:], 0 )
-    score_df = pd.DataFrame( word_list, columns=COLUMNS[:2] ).assign(**zero_dict)
+    score_df = pd.DataFrame( translation_list, columns=COLUMNS[:2] ).assign(**zero_dict)
 
     return score_df
 

@@ -33,7 +33,7 @@ def update_sample( sample: pd.Series, answer_is_correct: bool ) -> pd.DataFrame:
 
 ### supporting functions ###
 
-def explode_answer( answer: str ) -> set:
+def explode_answer( answer: str ) -> set[str]:
     """ Explode the given answer out to a list of possible constituent answers """
     
     # split the correct answer if it consists of multiple allowed options
