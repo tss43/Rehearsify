@@ -8,8 +8,8 @@ setuptools.setup(
     version="1.0.0",
     description="Programme to rehearse words",
     entry_points = {
-        'console_scripts': [
+        'console_scripts':[
             'FindDuplicates=command_line:script_find_duplicates' ]},
     packages=setuptools.find_packages('src'),
-    package_dir={'': 'src'}
+    package_dir={'':'src'}
 )
