@@ -62,7 +62,7 @@ def save_as_dictionary_txtfile(filepath: str, score_df: pd.DataFrame):
     answer_array = score_df['answer'].to_numpy()
     eq_sign_list = [" = "]*n_translations
 
-    with open(filepath, 'a+') as f:     
-        f.writelines( [ ''.join(transl) + '\n' for transl in zip(question_array, eq_sign_list, answer_array) ] )
+    with open(filepath, 'a+') as dict_txtfile:     
+        dict_txtfile.writelines( [ ''.join(transl) + '\n' for transl in zip(question_array, eq_sign_list, answer_array) ] )
 
 
