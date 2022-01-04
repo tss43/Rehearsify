@@ -1,5 +1,0 @@
-
-de universiteit = the university
-de telefoon = the telephone
-het uur = the hour
-het uur = the hour

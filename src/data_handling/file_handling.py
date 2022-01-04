@@ -16,8 +16,9 @@ def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
     translation_list = [ tuple( transl.split(' = ')[::-1] ) for transl in translation_list if transl.strip() ]
     
     # check that every translation contained exactly one '=', i.e. has both a to and from side
-    if not all( len(split_transl)==2 for split_transl in translation_list ):
-        raise ValueError("Some translations were incomplete!")
+    incomplete_translations = [split_transl for split_transl in translation_list if len(split_transl)!=2 ]
+    if incomplete_translations:
+        raise ValueError(f"Some translations were incomplete:\n {incomplete_translations}")
     
     zero_dict = dict.fromkeys( COLUMNS[2:], 0 )
     score_df = pd.DataFrame( translation_list, columns=COLUMNS[:2] ).assign(**zero_dict)

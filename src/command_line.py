@@ -17,7 +17,7 @@ def script_find_duplicates():
     if __name__ == "command_line":       
         args=sys.argv[1:]
         argc=len(args) 
-        print(f"{args}\n {argc}\n")
+
         if argc!=1: 
             raise IndexError("Usage: find_duplicates(dictionary_fpath: str) -> set[str]")
         else:
@@ -33,4 +33,7 @@ def script_find_duplicates():
             
             duplicates_set = find_duplicates(score_df)
 
-            print(f"Duplicate question entries are:\n {duplicates_set}")
+            if duplicates_set:
+                print(f"Duplicate question entries are:\n {duplicates_set}")
+            else:
+                print("No duplicate questions found!")
