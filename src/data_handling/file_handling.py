@@ -32,9 +32,11 @@ def update_with_df(score_df: pd.DataFrame, _temp_df: pd.DataFrame) -> pd.DataFra
     # keeping only words from df that are in .txt
     mask_intersection = np.all( np.isin( score_df[COLUMNS[:2]].to_numpy(), _temp_df[COLUMNS[:2]].to_numpy() ), axis=1 )
     _intersection_df = score_df[mask_intersection]
+    
     # adding words only in .txt to df
     mask_ldiff = np.all( np.isin( _temp_df[COLUMNS[:2]].to_numpy(), score_df[COLUMNS[:2]].to_numpy(), invert=True ), axis=1 )
     _ldiff_df = score_df[mask_ldiff]
+    
     _score_df = _intersection_df.append( _ldiff_df )
 
     ## keeping only words from df that are in .txt
@@ -44,6 +46,7 @@ def update_with_df(score_df: pd.DataFrame, _temp_df: pd.DataFrame) -> pd.DataFra
     ## adding words only in .txt to df
     #_rdiff_df = pd.merge(score_df, _temp_df, how='right', on=COLUMNS[:2], indicator='Exist')
     #_rdiff_df = _temp_df.loc[_rdiff_df['Exist'] == 'right_only']
+    
     #_score__df = _intersection_df.append( _rdiff_df )
 
     return _score_df 
@@ -60,6 +63,6 @@ def save_as_dictionary_txtfile(filepath: str, score_df: pd.DataFrame):
     eq_sign_list = [" = "]*n_translations
 
     with open(filepath, 'a+') as f:     
-        f.writelines( zip(question_array, eq_sign_list, answer_array) )
+        f.writelines( [ ''.join(transl) + '\n' for transl in zip(question_array, eq_sign_list, answer_array) ] )
 
 
