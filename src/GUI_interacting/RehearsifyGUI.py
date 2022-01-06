@@ -107,7 +107,7 @@ class RehearsifyGUI:
  
         # specify adaptive scaling behaviour of rows/columns in main window
         self.window.title("Rehearsify - a language practising app")
-        self.window.geometry("600x150")
+        self.window.geometry("600x200")
         self.window.columnconfigure(0, weight=0)
         self.window.columnconfigure(1, weight=1)
         self.window.rowconfigure(0, weight=0)
@@ -191,14 +191,14 @@ class RehearsifyGUI:
         # update score_df with new sample statistics
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
-        # update text widgets 
+        # update log treeview widget
         update_vals = (
             f"{'ooo' if answer_is_correct else 'xxx'}",
             f"{self.sample.question}",
             f"{self.user_answer}",
             f"{self.sample.answer}",
             f"{self.sample.total-self.sample.wrong}/{self.sample.total}" )
-        self.log.insert('', 1, values=update_vals )
+        self.log.insert('', 0, values=update_vals )
 
         # update prompt with newly selected question
         self.sample = select_randomly_weighed_question( self.score_df )
@@ -211,9 +211,14 @@ class RehearsifyGUI:
         question = askstring( "Question lookup", "Question for which to find the sample:" )
         self.sample = find_sample_from_question( self.score_df, question )
 
-         # update text widget of previously rehearsed questions
-        self.previous_rehearsed.insert(1.0, f"score={self.sample.total-self.sample.wrong}/{self.sample.total}\
-            \t{self.sample.question} = { self.sample.answer}\n")
+        # update log treeview widget
+        update_vals = (
+            "---",
+            f"{self.sample.question}",
+            "---",
+            f"{self.sample.answer}",
+            f"{self.sample.total-self.sample.wrong}/{self.sample.total}" )
+        self.log.insert('', 0, values=update_vals )
 
 
     def lookup_answer( self ):
@@ -222,10 +227,14 @@ class RehearsifyGUI:
         answer = askstring( "Answer lookup", "Answer for which to find the sample:" )
         self.sample = find_sample_from_answer( self.score_df, answer )
 
-         # update text widget of previously rehearsed questions
-        self.previous_rehearsed.insert(1.0, f"score={self.sample.total-self.sample.wrong}/{self.sample.total}\
-            \t{self.sample.question} = { self.sample.answer}\n")
-
+        # update log treeview widget
+        update_vals = (
+            "---",
+            f"{self.sample.question}",
+            "---",
+            f"{self.sample.answer}",
+            f"{self.sample.total-self.sample.wrong}/{self.sample.total}" )
+        self.log.insert('', 0, values=update_vals )
 
 
     
