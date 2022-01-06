@@ -105,7 +105,7 @@ class RehearsifyGUI:
         
             self.counter.grid(row=2, column=1, sticky='E', padx=5)
  
-        # specify adaptive scaling behaviour of rows/columns
+        # specify adaptive scaling behaviour of rows/columns in main window
         self.window.title("Rehearsify - a language practising app")
         self.window.geometry("600x150")
         self.window.columnconfigure(0, weight=0)
