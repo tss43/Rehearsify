@@ -62,8 +62,7 @@ class RehearsifyGUI:
         self.go_btn = tk.Button( self.question_answer_frame, text="Go", command = self.process_answer )
 
         self.just_rehearsed_frame = tk.Frame( window, bd=1 )
-        self.just_rehearsed_lbl = tk.Label( self.just_rehearsed_frame, text="Previous: " )
-        self.just_rehearsed_xo = tk.Text( self.just_rehearsed_frame, height=1 )
+        self.just_rehearsed_xo = tk.Text( self.just_rehearsed_frame, height=1, width=3 )
         self.just_rehearsed = tk.Text( self.just_rehearsed_frame, height=1, wrap=tk.WORD )
         self.previous_rehearsed = tk.Text( window, height=MAX_LINES_DISPLAY, wrap=tk.WORD )
         self.counter = tk.Label( window, textvariable=self.counter_text )
@@ -87,11 +86,9 @@ class RehearsifyGUI:
 
         self.just_rehearsed_frame.grid(row=1, column=1, sticky='EW', padx=5 )
         self.just_rehearsed_frame.columnconfigure(0, weight=0)
-        self.just_rehearsed_frame.columnconfigure(1, weight=0)
-        self.just_rehearsed_frame.columnconfigure(2, weight=1)
-        self.just_rehearsed_lbl.grid(row=0, column=0, sticky='W')
-        self.just_rehearsed_xo.grid(row=0, column=1, sticky='W')
-        self.just_rehearsed.grid(row=0, column=2, sticky='EW')
+        self.just_rehearsed_frame.columnconfigure(1, weight=1)
+        self.just_rehearsed_xo.grid(row=0, column=0, sticky='W', padx=1 )
+        self.just_rehearsed.grid(row=0, column=1, sticky='EW', padx=1 )
         
         self.previous_rehearsed.grid(row=2, column=1, sticky='NSEW', padx=5, pady=2)
 
