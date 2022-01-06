@@ -41,7 +41,6 @@ class RehearsifyGUI:
         self.initialise_GUI()
  
 
-
     #instance methods
     def initialise_GUI( self ):
         """ Initialise the GUI. """
@@ -52,7 +51,7 @@ class RehearsifyGUI:
             def initialise_log( self ):
                 """ Initialise the log in the GUI. """
                 self.log.heading('#0', text='', anchor=tk.CENTER)
-                self.log.heading('#1', text='XO', anchor=tk.CENTER)
+                self.log.heading('#1', text='X/O', anchor=tk.CENTER)
                 self.log.heading('#2', text='Question', anchor=tk.CENTER)
                 self.log.heading('#3', text='User Answer', anchor=tk.CENTER)
                 self.log.heading('#4', text='Correct Answer', anchor=tk.CENTER)
@@ -79,7 +78,7 @@ class RehearsifyGUI:
             self.answer_entry.bind( '<Return>', self.process_answer )    
             self.go_btn = tk.Button( self.question_answer_frame, text="Go", command = self.process_answer )
 
-            self.log = ttk.Treeview( self.window, columns=('XO', 'Question', 'User answer', 'Correct answer', 'Wrong/Total') )
+            self.log = ttk.Treeview( self.window, columns=('X/O', 'Question', 'User answer', 'Correct answer', 'Wrong/Total') )
             initialise_log( self ) 
 
             self.counter = tk.Label( self.window, textvariable=self.counter_text )
@@ -200,15 +199,7 @@ class RehearsifyGUI:
             f"{self.sample.answer}",
             f"{self.sample.total-self.sample.wrong}/{self.sample.total}" )
         self.log.insert('', 1, values=update_vals )
-        
-        #if self.practise_count > 0:
-        #    self.just_rehearsed_xo.delete(1.0, tk.END)
-        #    self.just_rehearsed.delete(1.0, tk.END)
-        #self.just_rehearsed_xo.insert(1.0, f"{'ooo' if answer_is_correct else 'xxx'}")
-        #self.just_rehearsed.insert(1.0, f"{self.sample.question} = {self.user_answer}")
-        #self.previous_rehearsed.insert(1.0, f"score={self.sample.total-self.sample.wrong}/{self.sample.total}\
-        #       {self.sample.question} = { self.sample.answer}\n")
-#
+
         # update prompt with newly selected question
         self.sample = select_randomly_weighed_question( self.score_df )
         self.question.set(self.sample.question)
