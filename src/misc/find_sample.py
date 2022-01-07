@@ -1,4 +1,4 @@
-# translation_handling/find_sample.py
+# misc/find_sample.py
 
 import pandas as pd
 

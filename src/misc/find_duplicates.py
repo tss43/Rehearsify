@@ -1,4 +1,4 @@
-# translation_handling/find_duplicates.py
+# misc/find_duplicates.py
 
 import pandas as pd
 

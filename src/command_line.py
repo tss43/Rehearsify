@@ -5,8 +5,8 @@ import sys
 
 import pandas as pd
 
-from translation_handling.compute_statistics import compute_statitics
-from translation_handling.find_duplicates import find_duplicates
+from misc.compute_statistics import compute_statitics
+from misc.find_duplicates import find_duplicates
 from data_handling.file_handling import read_dictionary_txtfile
 
 

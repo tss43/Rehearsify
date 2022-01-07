@@ -1,4 +1,4 @@
-# translation_handling/compute_statistics.py
+# misc/compute_statistics.py
 
 import pandas as pd
 
