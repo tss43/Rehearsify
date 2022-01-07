@@ -208,8 +208,8 @@ class RehearsifyGUI:
             'Question':         f"{self.sample.question}",
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      f"{self.user_answer}",
-            'Wrong/Total':      f"{self.sample.total-self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', 0, values=update_dict.values() )
+            'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
+        self.log.insert('', 0, values=list(update_dict.values()) )
 
         # update prompt with newly selected question
         self.sample = select_randomly_weighed_question( self.score_df )
@@ -228,8 +228,8 @@ class RehearsifyGUI:
             'Question':         f"{self.sample.question}",
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      "---",
-            'Wrong/Total':      f"{self.sample.total-self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', 0, values=update_dict.values() )
+            'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
+        self.log.insert('', 0, values=list(update_dict.values()) )
 
 
     def lookup_answer( self ):
@@ -244,8 +244,8 @@ class RehearsifyGUI:
             'Question':         f"{self.sample.question}",
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      "---",
-            'Wrong/Total':      f"{self.sample.total-self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', 0, values=update_dict.values() )
+            'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
+        self.log.insert('', 0, values=list(update_dict.values()) )
 
 
     
