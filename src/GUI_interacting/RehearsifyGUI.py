@@ -160,21 +160,23 @@ class RehearsifyGUI:
 
     def save_file( self ):
         """Save the current file as a new file."""
-        
-        # DO WORK HERE!
 
-        # sort score_df by question
-        ignore_str_list = askstring( )
-        _score_df = sort_df( self.score_df, ignore_str_list )
-
-        filepath = asksaveasfilename( defaultextension="pkl", filetypes=[("Pickle files", "*.pkl"), ("Text files", "*.txt")] )
+        # ask user for filepath
+        filepath = asksaveasfilename( 
+            defaultextension="pkl", filetypes=[("Pickle files", "*.pkl"), ("Text files", "*.txt")] )
         if not filepath:
             return
-        elif filepath.endswith(".txt"):
-            save_as_dictionary_txtfile( filepath, _score_df )
-        elif filepath.endswith(".pkl"):
-            _score_df.to_pickle(filepath)
-
+        else:
+             # sort score_df by answer, ignoring the regex obtained from the user
+            ignore_str = askstring( 
+                "Translation ordering for saving", "Strings to ignore in sorting translations (seperated by '|'):" )
+            _score_df = sort_df( self.score_df, ignore_str )
+            
+            if filepath.endswith(".txt"):
+                save_as_dictionary_txtfile( filepath, _score_df )
+            elif filepath.endswith(".pkl"):
+                _score_df.to_pickle(filepath)
+            
         self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
 
 
