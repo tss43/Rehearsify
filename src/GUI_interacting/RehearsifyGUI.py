@@ -54,15 +54,15 @@ class RehearsifyGUI:
                 self.log.heading('#0', text='', anchor=tk.CENTER)
                 self.log.heading('#1', text='X/O', anchor=tk.CENTER)
                 self.log.heading('#2', text='Question', anchor=tk.CENTER)
-                self.log.heading('#3', text='User Answer', anchor=tk.CENTER)
-                self.log.heading('#4', text='Correct Answer', anchor=tk.CENTER)
+                self.log.heading('#3', text='Correct Answer', anchor=tk.CENTER)
+                self.log.heading('#4', text='User Answer', anchor=tk.CENTER)
                 self.log.heading('#5', text='Wrong/Total', anchor=tk.CENTER)
 
                 self.log.column('#0', width=0,  stretch=tk.NO)
                 self.log.column('#1', width=35, minwidth=35, stretch=tk.NO, anchor=tk.CENTER)
-                self.log.column('#2', width=110, minwidth=110, stretch=tk.YES)
-                self.log.column('#3', width=100, minwidth=100, stretch=tk.YES)
-                self.log.column('#4', width=120, minwidth=120, stretch=tk.YES)
+                self.log.column('#2', width=150, minwidth=150, stretch=tk.YES)
+                self.log.column('#3', width=280, minwidth=280, stretch=tk.YES)
+                self.log.column('#4', width=280, minwidth=280, stretch=tk.YES)
                 self.log.column('#5', width=75, minwidth=75, stretch=tk.NO, anchor=tk.CENTER)
 
             self.button_frame = tk.Frame(self.window, relief=tk.RAISED, bd=2)
@@ -79,7 +79,9 @@ class RehearsifyGUI:
             self.answer_entry.bind( '<Return>', self.process_answer )    
             self.go_btn = tk.Button( self.question_answer_frame, text="Go", command = self.process_answer )
 
-            self.log = ttk.Treeview( self.window, columns=('X/O', 'Question', 'User answer', 'Correct answer', 'Wrong/Total') )
+            self.log = ttk.Treeview( 
+                self.window, 
+                columns=('X/O', 'Question', 'Correct answer', 'User answer', 'Wrong/Total') )
             initialise_log( self ) 
 
             self.counter = tk.Label( self.window, textvariable=self.counter_text )
@@ -201,13 +203,13 @@ class RehearsifyGUI:
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
         # update log treeview widget
-        update_vals = (
-            f"{'ooo' if answer_is_correct else 'xxx'}",
-            f"{self.sample.question}",
-            f"{self.user_answer}",
-            f"{self.sample.answer}",
-            f"{self.sample.total-self.sample.wrong}/{self.sample.total}" )
-        self.log.insert('', 0, values=update_vals )
+        update_dict = {
+            'X/0':              f"{'ooo' if answer_is_correct else 'xxx'}",
+            'Question':         f"{self.sample.question}",
+            'Correct answer':   f"{self.sample.answer}",
+            'User answer':      f"{self.user_answer}",
+            'Wrong/Total':      f"{self.sample.total-self.sample.wrong}/{self.sample.total}" }
+        self.log.insert('', 0, values=update_dict.values() )
 
         # update prompt with newly selected question
         self.sample = select_randomly_weighed_question( self.score_df )
@@ -221,13 +223,13 @@ class RehearsifyGUI:
         self.sample = find_sample_from_question( self.score_df, question )
 
         # update log treeview widget
-        update_vals = (
-            "---",
-            f"{self.sample.question}",
-            "---",
-            f"{self.sample.answer}",
-            f"{self.sample.total-self.sample.wrong}/{self.sample.total}" )
-        self.log.insert('', 0, values=update_vals )
+        update_dict = {
+            'X/0':              "---",
+            'Question':         f"{self.sample.question}",
+            'Correct answer':   f"{self.sample.answer}",
+            'User answer':      "---",
+            'Wrong/Total':      f"{self.sample.total-self.sample.wrong}/{self.sample.total}" }
+        self.log.insert('', 0, values=update_dict.values() )
 
 
     def lookup_answer( self ):
@@ -237,13 +239,13 @@ class RehearsifyGUI:
         self.sample = find_sample_from_answer( self.score_df, answer )
 
         # update log treeview widget
-        update_vals = (
-            "---",
-            f"{self.sample.question}",
-            "---",
-            f"{self.sample.answer}",
-            f"{self.sample.total-self.sample.wrong}/{self.sample.total}" )
-        self.log.insert('', 0, values=update_vals )
+        update_dict = {
+            'X/0':              "---",
+            'Question':         f"{self.sample.question}",
+            'Correct answer':   f"{self.sample.answer}",
+            'User answer':      "---",
+            'Wrong/Total':      f"{self.sample.total-self.sample.wrong}/{self.sample.total}" }
+        self.log.insert('', 0, values=update_dict.values() )
 
 
     
