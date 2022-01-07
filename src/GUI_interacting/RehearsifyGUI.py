@@ -12,10 +12,11 @@ import pandas as pd
 from src.data_handling.file_handling import read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile
 from src.question_posing.question_selecting import select_randomly_weighed_question
 from src.answer_handling.answer_handling import check_answer, update_sample
-from src.translation_handling.find_sample import find_sample_from_question, find_sample_from_answer
+
+from src.misc.df_sorting import sort_df
+from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
 
 
-MAX_LINES_DISPLAY = 5
 COLUMNS = ['question', 'answer', 'wrong_perc', 'wrong', 'total']
 
 
@@ -160,13 +161,19 @@ class RehearsifyGUI:
     def save_file( self ):
         """Save the current file as a new file."""
         
+        # DO WORK HERE!
+
+        # sort score_df by question
+        ignore_str_list = askstring( )
+        _score_df = sort_df( self.score_df, ignore_str_list )
+
         filepath = asksaveasfilename( defaultextension="pkl", filetypes=[("Pickle files", "*.pkl"), ("Text files", "*.txt")] )
         if not filepath:
             return
         elif filepath.endswith(".txt"):
-            save_as_dictionary_txtfile( filepath, self.score_df )
+            save_as_dictionary_txtfile( filepath, _score_df )
         elif filepath.endswith(".pkl"):
-            self.score_df.to_pickle(filepath)
+            _score_df.to_pickle(filepath)
 
         self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
 
