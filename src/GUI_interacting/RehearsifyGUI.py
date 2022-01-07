@@ -10,8 +10,8 @@ from tkinter.simpledialog import askstring
 import pandas as pd
 
 from src.data_handling.file_handling import read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile
-from src.question_posing.question_selecting import select_randomly_weighed_question
-from src.answer_handling.answer_handling import check_answer, update_sample
+from translation_handling.question_selecting import select_randomly_weighed_question
+from src.translation_handling.answer_handling import check_answer, update_sample
 
 from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
