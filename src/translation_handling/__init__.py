@@ -1,2 +1,2 @@
-# question_posing/__init__.py
+# translation_handling/__init__.py
 """ to treat directory as importable package """

@@ -1,4 +1,4 @@
-# answer_handling/answer_handling.py
+# translation_handling/answer_handling.py
 
 import string
 import re
