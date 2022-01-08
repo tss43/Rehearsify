@@ -32,7 +32,7 @@ class RehearsifyGUI:
         self.practise_count = 0
         self.practise_wrong_count = 0
         self.counter_text = tk.StringVar( 
-            window, value='session wrong/total: ' + str(self.practise_wrong_count) + '/' +str(self.practise_count) )
+            window, value='session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
 
         self.score_df = pd.DataFrame()
         self.sample = pd.Series(['(questions)','(user input answers)',0,0,0], index=COLUMNS ) 
@@ -81,13 +81,11 @@ class RehearsifyGUI:
             self.go_btn = tk.Button( self.question_answer_frame, text="Go", command = self.process_answer )
 
             self.log = ttk.Treeview( 
-                self.window, 
-                columns=('X/O', 'Question', 'Correct answer', 'User answer', 'Wrong/total') )
+                self.window, columns=('X/O', 'Question', 'Correct answer', 'User answer', 'Wrong/total') )
             initialise_log( self ) 
 
             self.lower_frame = tk.Frame( self.window )
-            self.mark_correct_btn = tk.Button( 
-                self.lower_frame, text="Mark previous correct", command=self.mark_correct )
+            self.mark_correct_btn = tk.Button( self.lower_frame, text="Mark previous correct", command=self.mark_correct )
             self.counter = tk.Label( self.lower_frame, textvariable=self.counter_text )
             
 
@@ -208,7 +206,7 @@ class RehearsifyGUI:
         self.practise_count += 1 
         self.practise_wrong_count += not answer_is_correct 
         self.counter_text.set( 
-            'session wrong/total: ' + str(self.practise_wrong_count) + '/' +str(self.practise_count) )
+            'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
 
         # update score_df with new sample statistics
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
@@ -280,7 +278,7 @@ class RehearsifyGUI:
             # update counter
             self.practise_wrong_count -= not previous_answer_is_correct
             self.counter_text.set( 
-                'session wrong/total: ' + str(self.practise_wrong_count) + '/' +str(self.practise_count) )
+                'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
             
              # update log treeview widget
             self.log.delete( str(self.practise_count) )
