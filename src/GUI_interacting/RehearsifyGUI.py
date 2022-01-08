@@ -55,9 +55,9 @@ class RehearsifyGUI:
                 self.log.heading('#0', text='', anchor=tk.CENTER)
                 self.log.heading('#1', text='X/O', anchor=tk.CENTER)
                 self.log.heading('#2', text='Question', anchor=tk.CENTER)
-                self.log.heading('#3', text='Correct Answer', anchor=tk.CENTER)
-                self.log.heading('#4', text='User Answer', anchor=tk.CENTER)
-                self.log.heading('#5', text='Wrong/Total', anchor=tk.CENTER)
+                self.log.heading('#3', text='Correct answer', anchor=tk.CENTER)
+                self.log.heading('#4', text='User answer', anchor=tk.CENTER)
+                self.log.heading('#5', text='Wrong/total', anchor=tk.CENTER)
 
                 self.log.column('#0', width=0,  stretch=tk.NO)
                 self.log.column('#1', width=35, minwidth=35, stretch=tk.NO, anchor=tk.CENTER)
@@ -82,11 +82,12 @@ class RehearsifyGUI:
 
             self.log = ttk.Treeview( 
                 self.window, 
-                columns=('X/O', 'Question', 'Correct answer', 'User answer', 'Wrong/Total') )
+                columns=('X/O', 'Question', 'Correct answer', 'User answer', 'Wrong/total') )
             initialise_log( self ) 
 
             self.lower_frame = tk.Frame( self.window )
-            self.mark_correct_btn = tk.Button( self.lower_frame, text="Mark correct", command=self.mark_correct )
+            self.mark_correct_btn = tk.Button( 
+                self.lower_frame, text="Mark previous correct", command=self.mark_correct )
             self.counter = tk.Label( self.lower_frame, textvariable=self.counter_text )
             
 
@@ -206,7 +207,8 @@ class RehearsifyGUI:
         # update counter
         self.practise_count += 1 
         self.practise_wrong_count += not answer_is_correct 
-        self.counter_text.set( 'session wrong/total: ' + str(self.practise_wrong_count) + '/' +str(self.practise_count) )
+        self.counter_text.set( 
+            'session wrong/total: ' + str(self.practise_wrong_count) + '/' +str(self.practise_count) )
 
         # update score_df with new sample statistics
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
@@ -217,8 +219,8 @@ class RehearsifyGUI:
             'Question':         f"{self.sample.question}",
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      f"{self.user_answer}",
-            'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', index=0, iid=self.practised_count, values=list(update_dict.values()) )
+            'Wrong/total':      f"{self.sample.wrong}/{self.sample.total}" }
+        self.log.insert('', index=0, iid=self.practise_count, values=list(update_dict.values()) )
 
         # update prompt with newly selected question
         self.sample = select_randomly_weighed_question( self.score_df )
@@ -239,7 +241,7 @@ class RehearsifyGUI:
             'Question':         f"{self.sample.question}",
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      "---",
-            'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
+            'Wrong/total':      f"{self.sample.wrong}/{self.sample.total}" }
         self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
 
@@ -257,7 +259,7 @@ class RehearsifyGUI:
             'Question':         f"{self.sample.question}",
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      "---",
-            'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
+            'Wrong/total':      f"{self.sample.wrong}/{self.sample.total}" }
         self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
 
@@ -265,26 +267,33 @@ class RehearsifyGUI:
         """Retroactively mark the previous answer as correct if it was false, and add it as a correct option."""
         
         previous_question = self.log.set( item=str(self.practise_count), column='Question' )
-        previous_correct_answer = self.log.set( item=str(self.practise_count), column='Correct Answer' )
-        previous_user_answer = self.log.set( item=str(self.practise_count), column='User Answer' )
+        previous_correct_answer = self.log.set( item=str(self.practise_count), column='Correct answer' )
+        previous_user_answer = self.log.set( item=str(self.practise_count), column='User answer' )
         
         previous_answer_is_correct = check_answer( previous_user_answer, previous_correct_answer ) 
         if not previous_answer_is_correct:
             
+            # update score_df
             self.score_df = add_correct_answer( self.score_df, previous_question, previous_user_answer )
             self.score_df = decrement_wrong_score( self.score_df, previous_question )
-        
-            self.log.delete( str(self.practise_count) )
-
-            _sample = self.score_df[ self.score_df['question'].str.match(previous_question) ]
+            
+            # update counter
+            self.practise_wrong_count -= not previous_answer_is_correct
+            self.counter_text.set( 
+                'session wrong/total: ' + str(self.practise_wrong_count) + '/' +str(self.practise_count) )
+            
              # update log treeview widget
+            self.log.delete( str(self.practise_count) )
+            _sample = self.score_df[ self.score_df['question'].str.match(previous_question) ].squeeze()
             update_dict = {
                 'X/0':              "ooo",
                 'Question':         f"{_sample.question}",
                 'Correct answer':   f"{_sample.answer}",
                 'User answer':      f"{previous_user_answer}",
-                'Wrong/Total':      f"{_sample.wrong}/{_sample.total}" }
+                'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
             self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
+
+
         
         
 
