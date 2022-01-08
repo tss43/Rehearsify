@@ -10,8 +10,9 @@ from tkinter.simpledialog import askstring
 import pandas as pd
 
 from src.data_handling.file_handling import read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile
-from translation_handling.question_selecting import select_randomly_weighed_question
+from src.translation_handling.question_selecting import select_randomly_weighed_question
 from src.translation_handling.answer_handling import check_answer, update_sample
+from src.translation_handling.update_dataframe import add_correct_answer, decrement_wrong_score
 
 from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
@@ -84,7 +85,10 @@ class RehearsifyGUI:
                 columns=('X/O', 'Question', 'Correct answer', 'User answer', 'Wrong/Total') )
             initialise_log( self ) 
 
-            self.counter = tk.Label( self.window, textvariable=self.counter_text )
+            self.lower_frame = tk.Frame( self.window )
+            self.mark_correct_btn = tk.Button( self.lower_frame, text="Mark correct", command=self.mark_correct )
+            self.counter = tk.Label( self.lower_frame, textvariable=self.counter_text )
+            
 
         def place_widgets_on_grid( self ):
             """ Place the widgets on the GUI grid. """
@@ -106,7 +110,12 @@ class RehearsifyGUI:
     
             self.log.grid(row=1,column=1, sticky='NSEW', padx=5, pady=1 )
         
-            self.counter.grid(row=2, column=1, sticky='E', padx=5)
+            self.lower_frame.grid(row=2,column=1, sticky='NSEW')
+            self.lower_frame.columnconfigure([0,2], weight=0)
+            self.lower_frame.columnconfigure(1, weight=1)
+            self.mark_correct_btn.grid(row=0, column=0, sticky='W', padx=5)
+            self.counter.grid(row=0, column=2, sticky='E', padx=5)
+            
  
         # specify adaptive scaling behaviour of rows/columns in main window
         self.window.title("Rehearsify - a language practising app")
@@ -209,7 +218,7 @@ class RehearsifyGUI:
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      f"{self.user_answer}",
             'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', 0, values=list(update_dict.values()) )
+        self.log.insert('', index=0, iid=self.practised_count, values=list(update_dict.values()) )
 
         # update prompt with newly selected question
         self.sample = select_randomly_weighed_question( self.score_df )
@@ -222,6 +231,8 @@ class RehearsifyGUI:
         question = askstring( "Question lookup", "Question for which to find the sample:" )
         self.sample = find_sample_from_question( self.score_df, question )
 
+        self.practise_count += 1
+
         # update log treeview widget
         update_dict = {
             'X/0':              "---",
@@ -229,7 +240,7 @@ class RehearsifyGUI:
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      "---",
             'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', 0, values=list(update_dict.values()) )
+        self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
 
     def lookup_answer( self ):
@@ -238,6 +249,8 @@ class RehearsifyGUI:
         answer = askstring( "Answer lookup", "Answer for which to find the sample:" )
         self.sample = find_sample_from_answer( self.score_df, answer )
 
+        self.practise_count += 1
+
         # update log treeview widget
         update_dict = {
             'X/0':              "---",
@@ -245,7 +258,37 @@ class RehearsifyGUI:
             'Correct answer':   f"{self.sample.answer}",
             'User answer':      "---",
             'Wrong/Total':      f"{self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', 0, values=list(update_dict.values()) )
+        self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
+
+
+    def mark_correct( self ):
+        """Retroactively mark the previous answer as correct if it was false, and add it as a correct option."""
+        
+        previous_question = self.log.set( item=str(self.practise_count), column='Question' )
+        previous_correct_answer = self.log.set( item=str(self.practise_count), column='Correct Answer' )
+        previous_user_answer = self.log.set( item=str(self.practise_count), column='User Answer' )
+        
+        previous_answer_is_correct = check_answer( previous_user_answer, previous_correct_answer ) 
+        if not previous_answer_is_correct:
+            
+            self.score_df = add_correct_answer( self.score_df, previous_question, previous_user_answer )
+            self.score_df = decrement_wrong_score( self.score_df, previous_question )
+        
+            self.log.delete( str(self.practise_count) )
+
+            _sample = self.score_df[ self.score_df['question'].str.match(previous_question) ]
+             # update log treeview widget
+            update_dict = {
+                'X/0':              "ooo",
+                'Question':         f"{_sample.question}",
+                'Correct answer':   f"{_sample.answer}",
+                'User answer':      f"{previous_user_answer}",
+                'Wrong/Total':      f"{_sample.wrong}/{_sample.total}" }
+            self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
+        
+        
+
+
 
 
     
