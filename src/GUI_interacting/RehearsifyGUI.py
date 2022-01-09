@@ -135,11 +135,13 @@ class RehearsifyGUI:
     def open_file( self ):
         """Open a dictionary file for practising."""
         
-        filepath = askopenfilename( filetypes=[("Pickle files", "*.pkl"), ("Text files", "*.txt")] )
+        filepath = askopenfilename( filetypes=[("Pickle files", "*.pkl"),("CSV files", "*.csv"), ("Text files", "*.txt")] )
         if not filepath:
             return
         elif filepath.endswith(".txt"):
             self.score_df = read_dictionary_txtfile( filepath )
+        elif filepath.endswith("csv"):
+            self.score_df = pd.read_csv( filepath )
         elif filepath.endswith(".pkl"):
             self.score_df = pd.read_pickle( filepath )
                     
@@ -173,7 +175,7 @@ class RehearsifyGUI:
 
         # ask user for filepath
         filepath = asksaveasfilename( 
-            defaultextension="pkl", filetypes=[("Pickle files", "*.pkl"), ("Text files", "*.txt")] )
+            defaultextension="pkl", filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("Text files", "*.txt")] )
         if not filepath:
             return
         else:
@@ -184,6 +186,8 @@ class RehearsifyGUI:
             
             if filepath.endswith(".txt"):
                 save_as_dictionary_txtfile( filepath, _score_df )
+            elif filepath.endswith(".csv"):
+                _score_df.to_csv(filepath)
             elif filepath.endswith(".pkl"):
                 _score_df.to_pickle(filepath)
             
