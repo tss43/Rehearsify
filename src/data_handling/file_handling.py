@@ -20,7 +20,7 @@ def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
     if incomplete_translations:
         raise ValueError(f"Some translations were incomplete:\n {incomplete_translations}")
     
-    zero_dict = dict.fromkeys( COLUMNS[2:], 0 )
+    zero_dict = {COLUMNS[3]: np.NaN, COLUMNS[4]: 0, COLUMNS[5]: 0}
     score_df = pd.DataFrame( translation_list, columns=COLUMNS[:2] ).assign(**zero_dict)
 
     return score_df
@@ -39,19 +39,7 @@ def update_with_df(score_df: pd.DataFrame, _temp_df: pd.DataFrame) -> pd.DataFra
     
     _score_df = _intersection_df.append( _ldiff_df )
 
-    ## keeping only words from df that are in .txt
-    #_intersection_df = pd.merge(score_df, _temp_df, how='left', on=COLUMNS[:2], indicator='Exist')
-    #_intersection_df = score_df.loc[_intersection_df['Exist'] == 'both']
-
-    ## adding words only in .txt to df
-    #_rdiff_df = pd.merge(score_df, _temp_df, how='right', on=COLUMNS[:2], indicator='Exist')
-    #_rdiff_df = _temp_df.loc[_rdiff_df['Exist'] == 'right_only']
-    
-    #_score__df = _intersection_df.append( _rdiff_df )
-
     return _score_df 
-
-
 
 
 def save_as_dictionary_txtfile(filepath: str, score_df: pd.DataFrame):

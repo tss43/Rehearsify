@@ -7,6 +7,7 @@ import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.simpledialog import askstring
 
+import numpy as np
 import pandas as pd
 
 from src.data_handling.file_handling import read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile
@@ -35,7 +36,7 @@ class RehearsifyGUI:
             window, value='session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
 
         self.score_df = pd.DataFrame()
-        self.sample = pd.Series(['(questions)','(user input answers)',0,0,0], index=COLUMNS ) 
+        self.sample = pd.Series(['(questions)','(user input answers)', np.NaN,0,0], index=COLUMNS ) 
         self.question = tk.StringVar( window, value=self.sample.question )
         self.user_answer = tk.StringVar( window, value=self.sample.answer )
 
@@ -135,16 +136,25 @@ class RehearsifyGUI:
     def open_file( self ):
         """Open a dictionary file for practising."""
         
-        filepath = askopenfilename( filetypes=[("Pickle files", "*.pkl"),("CSV files", "*.csv"), ("Text files", "*.txt")] )
+        filepath = askopenfilename( 
+            filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"), 
+            ("Text files", "*.txt")] )
         if not filepath:
             return
         elif filepath.endswith(".txt"):
             self.score_df = read_dictionary_txtfile( filepath )
         elif filepath.endswith("csv"):
             self.score_df = pd.read_csv( filepath )
+        elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
+            self.score_df = pd.read_excel( filepath )
         elif filepath.endswith(".pkl"):
             self.score_df = pd.read_pickle( filepath )
-                    
+
+        try:
+            self.score_df = self.score_df[COLUMNS]
+        except KeyError("Attempted to open a corrupted DataFrame."):
+            print(f"Table should contain columns {COLUMNS}.")
+
         # update prompt with first selected question
         self.sample = select_randomly_weighed_question( self.score_df )
         self.question.set(self.sample.question)
@@ -175,19 +185,23 @@ class RehearsifyGUI:
 
         # ask user for filepath
         filepath = asksaveasfilename( 
-            defaultextension="pkl", filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("Text files", "*.txt")] )
+            defaultextension="pkl", 
+            filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"),
+             ("Text files", "*.txt")] )
         if not filepath:
             return
         else:
              # sort score_df by answer, ignoring the regex obtained from the user
             ignore_str = askstring( 
-                "Translation ordering for saving", "Strings to ignore in sorting translations (seperated by '|'):" )
+                "Translation ordering for saving", "Strings to ignore in sorting translations (separated by ' | '):" )
             _score_df = sort_df( self.score_df, ignore_str )
             
             if filepath.endswith(".txt"):
                 save_as_dictionary_txtfile( filepath, _score_df )
             elif filepath.endswith(".csv"):
                 _score_df.to_csv(filepath)
+            elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
+                _score_df.to_excel(filepath)
             elif filepath.endswith(".pkl"):
                 _score_df.to_pickle(filepath)
             
@@ -285,7 +299,6 @@ class RehearsifyGUI:
                 'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
             
              # update log treeview widget
-            self.log.delete( str(self.practise_count) )
             _sample = self.score_df[ self.score_df['question'].str.match(previous_question) ].squeeze()
             update_dict = {
                 'X/0':              "ooo",
@@ -293,6 +306,7 @@ class RehearsifyGUI:
                 'Correct answer':   f"{_sample.answer}",
                 'User answer':      f"{previous_user_answer}",
                 'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
+            self.log.delete( str(self.practise_count) )
             self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
 
