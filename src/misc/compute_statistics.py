@@ -8,7 +8,7 @@ def compute_statitics(score_df: pd.DataFrame) -> dict:
     n_translations = score_df.shape[0]
     n_practised_questions = score_df['total'].sum()
     n_wrongly_answered_questions = score_df['wrong'].sum()
-    perc_wrongly_answered_questions = (n_wrongly_answered_questions / n_practised_questions)*100
+    perc_wrongly_answered_questions = (n_wrongly_answered_questions / n_practised_questions) * 100
 
     stats_dict = {
         'Total translations (#)':           n_translations, 

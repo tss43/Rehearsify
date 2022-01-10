@@ -25,7 +25,7 @@ def update_sample( sample: pd.Series, answer_is_correct: bool ) -> pd.DataFrame:
     if not answer_is_correct:
         sample.wrong += 1
     sample.total += 1
-    sample.wrong_perc = sample.wrong / sample.total
+    sample.wrong_perc = sample.wrong / sample.total * 100
 
     return sample
 
