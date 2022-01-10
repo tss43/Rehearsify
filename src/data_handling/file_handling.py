@@ -3,9 +3,7 @@
 import numpy as np
 import pandas as pd
 
-
-COLUMNS = ['question', 'answer', 'wrong_perc', 'wrong', 'total']
-
+from GUI_interacting.RehearsifyGUI import COLUMNS 
 
 
 def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:

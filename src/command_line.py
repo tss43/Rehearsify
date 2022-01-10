@@ -9,6 +9,7 @@ from misc.compute_statistics import compute_statitics
 from misc.find_duplicates import find_duplicates
 from data_handling.file_handling import read_dictionary_txtfile
 
+from GUI_interacting.RehearsifyGUI import COLUMNS 
 
 def script_compute_statistics():
     """ Give some statistics of a dictionary.
@@ -25,12 +26,17 @@ def script_compute_statistics():
             dictionary_fpath = args[0]
             if not isinstance(dictionary_fpath, str):
                 raise TypeError("Usage: fprint_statistics(dictionary_fpath: str) -> list[str]")
-            elif dictionary_fpath.endswith(".txt"):
-                score_df = read_dictionary_txtfile( dictionary_fpath )
+            elif dictionary_fpath.endswith(".xls") | dictionary_fpath.endswith(".xlsx"):
+                score_df = pd.read_excel( dictionary_fpath )
             elif dictionary_fpath.endswith(".pkl"):
                 score_df = pd.read_pickle( dictionary_fpath )
             else:
-                raise ValueError("Usage: print_statistics('dictionary.txt') or print_statistics('dictionary.pkl')")
+                raise ValueError("Usage: print_statistics('dictionary.xls(x)') or print_statistics('dictionary.pkl')")
+            
+            try:
+                self.score_df = self.score_df[COLUMNS]
+            except KeyError("Attempted to open a corrupted DataFrame."):
+                print(f"Table should contain columns {COLUMNS}.")
             
             stats_dict = compute_statitics(score_df)
 
