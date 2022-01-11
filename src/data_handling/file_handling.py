@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from GUI_interacting.RehearsifyGUI import COLUMNS 
+from src.constants import COLUMNS 
 
 
 def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:

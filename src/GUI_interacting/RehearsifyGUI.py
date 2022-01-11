@@ -18,8 +18,7 @@ from src.translation_handling.update_dataframe import add_correct_answer, decrem
 from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
 
-
-COLUMNS = ['question', 'answer', 'wrong_perc', 'wrong', 'total']
+from src.constants import COLUMNS
 
 
 class RehearsifyGUI:

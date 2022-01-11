@@ -9,7 +9,7 @@ from misc.compute_statistics import compute_statitics
 from misc.find_duplicates import find_duplicates
 from data_handling.file_handling import read_dictionary_txtfile
 
-from GUI_interacting.RehearsifyGUI import COLUMNS 
+from constants import COLUMNS 
 
 def script_compute_statistics():
     """ Give some statistics of a dictionary.
@@ -34,7 +34,7 @@ def script_compute_statistics():
                 raise ValueError("Usage: print_statistics('dictionary.xls(x)') or print_statistics('dictionary.pkl')")
             
             try:
-                self.score_df = self.score_df[COLUMNS]
+                score_df = score_df[COLUMNS]
             except KeyError("Attempted to open a corrupted DataFrame."):
                 print(f"Table should contain columns {COLUMNS}.")
             
