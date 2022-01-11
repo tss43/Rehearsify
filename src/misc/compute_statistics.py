@@ -11,7 +11,7 @@ def compute_statitics(score_df: pd.DataFrame) -> dict:
     perc_wrongly_answered_questions = (n_wrongly_answered_questions / n_practised_questions) * 100
 
     stats_dict = {
-        'Total translations (#)':           n_translations, 
+        'Total entries (#)':                n_translations, 
         'Practised questions (#)':          n_practised_questions,
         'Wrongly answered questions (#)':   n_wrongly_answered_questions,
         'Wrongly answered questions (%)':   perc_wrongly_answered_questions
