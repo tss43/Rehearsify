@@ -21,17 +21,19 @@ def script_compute_statistics():
         argc=len(args) 
 
         if argc!=1: 
-            raise IndexError("Usage: print_statistics(dictionary_fpath: str) -> set[str]")
+            raise IndexError("Usage: print_statistics dictionary_fpath (=str) -> set[str]")
         else:
             dictionary_fpath = args[0]
             if not isinstance(dictionary_fpath, str):
                 raise TypeError("Usage: fprint_statistics(dictionary_fpath: str) -> list[str]")
+            elif dictionary_fpath.endswith(".txt"):
+                score_df = read_dictionary_txtfile( dictionary_fpath )
             elif dictionary_fpath.endswith(".xls") | dictionary_fpath.endswith(".xlsx"):
                 score_df = pd.read_excel( dictionary_fpath )
             elif dictionary_fpath.endswith(".pkl"):
                 score_df = pd.read_pickle( dictionary_fpath )
             else:
-                raise ValueError("Usage: print_statistics('dictionary.xls(x)') or print_statistics('dictionary.pkl')")
+                raise ValueError("Usage: print_statistics dictionary.txt/xls(x)/pkl")
             
             try:
                 score_df = score_df[COLUMNS]
