@@ -32,7 +32,7 @@ class RehearsifyGUI:
         self.practise_count = 0
         self.practise_wrong_count = 0
         self.counter_text = tk.StringVar( 
-            window, value='session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
+            window, value='session wrong/total: -/-' )
 
         self.score_df = pd.DataFrame(columns=COLUMNS)
         self.sample = pd.Series(['(questions)','(user input answers)', np.NaN,0,0], index=COLUMNS ) 
@@ -44,10 +44,7 @@ class RehearsifyGUI:
         self.prev_practise_count = self.score_df['total'].sum()
 
         self.stats_text = tk.StringVar( 
-            window, value='overall wrong/total/total entries: ' \
-            + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
-            + str(self.prev_practise_count+self.practise_count) + '/' \
-            + str(self.n_translations) )
+            window, value='overall wrong/total/total entries: -/-/-' )
 
         # initialise the GUI
         self.initialise_GUI()
