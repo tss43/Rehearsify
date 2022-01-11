@@ -210,7 +210,7 @@ class RehearsifyGUI:
         else:
              # sort score_df by answer, ignoring the regex obtained from the user
             ignore_str = askstring( 
-                "Translation ordering for saving", "Strings to ignore in sorting translations (separated by ' | '):" )
+                "Translation ordering for saving", "Strings to ignore in sorting translations (separated by '|'):" )
             _score_df = sort_df( self.score_df, ignore_str )
             
             if filepath.endswith(".txt"):
