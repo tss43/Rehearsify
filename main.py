@@ -15,7 +15,3 @@ def open_Rehearsify_GUI():
 # to enable executing module as script 
 if __name__ == "__main__":
     open_Rehearsify_GUI()
-
-# the puzzle -> la puzzle, el rompecabezas
-# subsequently -> después
-# to need something
