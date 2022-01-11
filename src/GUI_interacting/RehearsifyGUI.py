@@ -34,10 +34,20 @@ class RehearsifyGUI:
         self.counter_text = tk.StringVar( 
             window, value='session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
 
-        self.score_df = pd.DataFrame()
+        self.score_df = pd.DataFrame(columns=COLUMNS)
         self.sample = pd.Series(['(questions)','(user input answers)', np.NaN,0,0], index=COLUMNS ) 
         self.question = tk.StringVar( window, value=self.sample.question )
         self.user_answer = tk.StringVar( window, value=self.sample.answer )
+
+        self.n_translations = self.score_df.shape[0]
+        self.prev_practise_wrong_count = self.score_df['wrong'].sum()
+        self.prev_practise_count = self.score_df['total'].sum()
+
+        self.stats_text = tk.StringVar( 
+            window, value='overall wrong/total/total entries: ' \
+            + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
+            + str(self.prev_practise_count+self.practise_count) + '/' \
+            + str(self.n_translations) )
 
         # initialise the GUI
         self.initialise_GUI()
@@ -86,7 +96,8 @@ class RehearsifyGUI:
 
             self.lower_frame = tk.Frame( self.window )
             self.mark_correct_btn = tk.Button( self.lower_frame, text="Mark previous correct", command=self.mark_correct )
-            self.counter = tk.Label( self.lower_frame, textvariable=self.counter_text )
+            self.counter = tk.Label( self.lower_frame, font=('', 10), textvariable=self.counter_text )
+            self.stats = tk.Label( self.lower_frame, font=('', 10), textvariable=self.stats_text  )
             
 
         def place_widgets_on_grid( self ):
@@ -112,8 +123,9 @@ class RehearsifyGUI:
             self.lower_frame.grid(row=2,column=1, sticky='NSEW')
             self.lower_frame.columnconfigure([0,2], weight=0)
             self.lower_frame.columnconfigure(1, weight=1)
-            self.mark_correct_btn.grid(row=0, column=0, sticky='W', padx=5)
+            self.mark_correct_btn.grid(row=0, column=0, rowspan=2, sticky='W', padx=5)
             self.counter.grid(row=0, column=2, sticky='E', padx=5)
+            self.stats.grid(row=1, column=2, sticky='E', padx=5)
             
  
         # specify adaptive scaling behaviour of rows/columns in main window
@@ -160,6 +172,15 @@ class RehearsifyGUI:
         
         # remove pre-initialisation default answer
         self.answer_entry.delete(0, tk.END)
+
+        # set overall stats counter
+        self.n_translations = self.score_df.shape[0] 
+        self.prev_practise_wrong_count = self.score_df['wrong'].sum()
+        self.prev_practise_count = self.score_df['total'].sum()
+        self.stats_text.set( 'overall wrong/total/total entries: ' \
+            + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
+                + str(self.prev_practise_count+self.practise_count) + '/' \
+                    + str(self.n_translations) )
 
         # replace 'open' button with 'update...' button in GUI window
         self.btn_open.grid_remove() 
@@ -222,8 +243,13 @@ class RehearsifyGUI:
         # update counter
         self.practise_count += 1 
         self.practise_wrong_count += not answer_is_correct 
-        self.counter_text.set( 
-            'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
+        self.counter_text.set( 'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
+
+        # update overall stats counter
+        self.stats_text.set( 'overall wrong/total/total entries: ' \
+            + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
+            + str(self.prev_practise_count+self.practise_count) + '/' \
+            + str(self.n_translations) )
 
         # update score_df with new sample statistics
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
