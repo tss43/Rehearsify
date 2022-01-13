@@ -321,7 +321,7 @@ class RehearsifyGUI:
                 'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
             
              # update log treeview widget
-            _sample = self.score_df[ self.score_df['question'].str.match(previous_question) ].squeeze()
+            _sample = self.score_df[ self.score_df['question'].str.match(pat=fr'{previous_question}') ].squeeze()
             update_dict = {
                 'X/0':              "ooo",
                 'Question':         f"{_sample.question}",
