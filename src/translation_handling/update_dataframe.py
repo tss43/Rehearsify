@@ -16,6 +16,6 @@ def decrement_wrong_score(score_df: pd.DataFrame, question: str) -> pd.DataFrame
 
     sample_mask = score_df['question'].str.match(question)
     score_df.loc[sample_mask, 'wrong'] -= 1
-    score_df.loc[sample_mask, 'wrong_perc'] = score_df.loc[sample_mask, 'wrong']/score_df.loc[sample_mask, 'total']
+    score_df.loc[sample_mask, 'wrong_perc'] = 100 * score_df.loc[sample_mask, 'wrong'] / score_df.loc[sample_mask, 'total']
 
     return score_df
