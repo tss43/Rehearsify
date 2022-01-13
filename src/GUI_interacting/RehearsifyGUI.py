@@ -309,8 +309,8 @@ class RehearsifyGUI:
         previous_user_answer = self.log.set( item=str(self.practise_count), column='User answer' )
         
         previous_answer_is_correct = check_answer( previous_user_answer, previous_correct_answer ) 
+        
         if not previous_answer_is_correct:
-            
             # update score_df
             self.score_df = add_correct_answer( self.score_df, previous_question, previous_user_answer )
             self.score_df = decrement_wrong_score( self.score_df, previous_question )
