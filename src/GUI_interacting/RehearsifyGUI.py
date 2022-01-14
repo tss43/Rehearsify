@@ -318,8 +318,6 @@ class RehearsifyGUI:
             # update sample and score_df
             _sample = add_correct_answer( _sample, previous_user_answer )
             _sample = decrement_wrong_score( _sample )
-            
-            # update score_df with new sample
             self.score_df[ self.score_df['question']==_sample.question ] = _sample
 
             # update counter
