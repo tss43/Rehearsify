@@ -13,13 +13,11 @@ def check_answer(user_answer: str, correct_answer: str) -> bool:
     correct_answer_exploded = explode_answer( correct_answer )
 
     # count correct if intersection of exploded user answer set and exploded correct answer set is non-empty
-    if user_answer_exploded & correct_answer_exploded:
-        return True
-    else:
-        return False
+    intersection_answers_is_nonempty = bool( user_answer_exploded & correct_answer_exploded )
+    return intersection_answers_is_nonempty 
 
 
-def update_sample( sample: pd.Series, answer_is_correct: bool ) -> pd.DataFrame:
+def update_sample( sample: pd.Series, answer_is_correct: bool ) -> pd.Series:
     """ update the sampling series after a receiving a True/False answer on the question from the user"""
     
     if not answer_is_correct:
