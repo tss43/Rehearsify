@@ -249,7 +249,7 @@ class RehearsifyGUI:
             + str(self.n_translations) )
             
 
-        # update score_df with new sample statistics
+        # update score_df with new sample
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
         # update log treeview widget
@@ -312,10 +312,16 @@ class RehearsifyGUI:
         previous_answer_is_correct = check_answer( previous_user_answer, previous_correct_answer ) 
         
         if not previous_answer_is_correct:
-            # update score_df
-            self.score_df = add_correct_answer( self.score_df, previous_question, previous_user_answer )
-            self.score_df = decrement_wrong_score( self.score_df, previous_question )
+            # find sample belonging to previous question in score_df 
+            _sample = self.score_df[ self.score_df['question']==previous_question ].sample( n=1 ).squeeze()
             
+            # update sample and score_df
+            _sample = add_correct_answer( _sample, previous_user_answer )
+            _sample = decrement_wrong_score( _sample )
+            
+            # update score_df with new sample
+            self.score_df[ self.score_df['question']==_sample.question ] = _sample
+
             # update counter
             self.practise_wrong_count -= not previous_answer_is_correct
             self.counter_text.set( 
@@ -329,8 +335,6 @@ class RehearsifyGUI:
                 + str(self.n_translations) )
 
              # update log treeview widget
-            _sample_mask = self.score_df['question']==previous_question
-            _sample = self.score_df[ _sample_mask ].sample( n=1 ).squeeze()
             update_dict = {
                 'X/0':              "ooo",
                 'Question':         f"{_sample.question}",
