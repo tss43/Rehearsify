@@ -187,7 +187,7 @@ class RehearsifyGUI:
         
 
     def update_file( self ):
-        """Update the file by adding new words from a .txt and removing words that are not in this .txt """
+        """Update the file by adding new words from a .txt and removing words that are not in this .txt."""
 
         filepath = askopenfilename( filetypes=[("Text files", "*.txt")] )
         if not filepath:
@@ -233,7 +233,7 @@ class RehearsifyGUI:
         self.user_answer = self.answer_entry.get()
         self.answer_entry.delete(0, tk.END)
 
-        # check answer and update score_df
+        # check answer and update sample
         answer_is_correct = check_answer( self.user_answer, self.sample.answer ) 
         self.sample = update_sample( self.sample, answer_is_correct )
         
