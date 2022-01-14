@@ -38,8 +38,8 @@ def explode_answer( answer: str ) -> set[str]:
     
     # split the correct answer if it consists of multiple allowed options
     answer_explosion = answer.split('; ')
-    # also count as an answer ommitting any text in brackets
-    answer_explosion = set(answer_explosion) | { re.sub(r'\(.*?\)', '', ans).strip() for ans in answer_explosion }
+    # also count as an answer ommitting any text in brackets (and any potential surrounding whitespace)
+    answer_explosion = set(answer_explosion) | { re.sub(r'\s?\(.*?\)\s?', ' ', ans) for ans in answer_explosion }
     
     # ignore special characters/punctuation/case
     answer_explosion = { unidecode.unidecode(ans) for ans in answer_explosion }
