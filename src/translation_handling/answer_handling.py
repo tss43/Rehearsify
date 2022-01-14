@@ -3,7 +3,6 @@
 import string
 import re
 import unidecode 
-import pandas as pd
 
 
 def check_answer(user_answer: str, correct_answer: str) -> bool:
@@ -15,17 +14,6 @@ def check_answer(user_answer: str, correct_answer: str) -> bool:
     # count correct if intersection of exploded user answer set and exploded correct answer set is non-empty
     intersection_answers_is_nonempty = bool( user_answer_exploded & correct_answer_exploded )
     return intersection_answers_is_nonempty 
-
-
-def update_sample( sample: pd.Series, answer_is_correct: bool ) -> pd.Series:
-    """ update the sampling series after a receiving a True/False answer on the question from the user"""
-    
-    if not answer_is_correct:
-        sample.wrong += 1
-    sample.total += 1
-    sample.wrong_perc = 100 * sample.wrong / sample.total
-
-    return sample
 
 
 
