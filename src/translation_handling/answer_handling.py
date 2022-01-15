@@ -18,6 +18,7 @@ def check_answer(user_answer: str, correct_answer: str) -> bool:
 
 def explode_answer( answer: str ) -> set[str]:
     """ Explode the given answer out to a list of possible constituent answers """
+    
     # split the correct answer if it consists of multiple allowed options
     answer_explosion = answer.split('; ')
     # also count as an answer ommitting any text in brackets (and any potential surrounding whitespace)
