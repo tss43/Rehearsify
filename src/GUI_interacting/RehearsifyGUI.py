@@ -247,7 +247,6 @@ class RehearsifyGUI:
             + str(self.prev_practise_count+self.practise_count) + '/' \
             + str(self.n_translations) )
             
-
         # update score_df with new sample
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
@@ -339,7 +338,7 @@ class RehearsifyGUI:
                 'User answer':      f"{previous_user_answer}",
                 'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
             self.log.delete( str(self.practise_count) )
-            self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
+            self.log.insert( '', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
             # update the sample belonging to the current question if it was immediately repeated
             if previous_question==self.sample.question:
