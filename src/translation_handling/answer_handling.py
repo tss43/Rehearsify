@@ -20,9 +20,9 @@ def explode_answer( answer: str ) -> set[str]:
     """ Explode the given answer out to a list of possible constituent answers """
     
     # split the correct answer if it consists of multiple allowed options
-    answer_explosion = answer.split('; ')
+    answer_explosion = set( answer.split('; ') )
     # also count as an answer ommitting any text in brackets (and any potential surrounding whitespace)
-    answer_explosion = set(answer_explosion) | { re.sub(r'\s?\(.*?\)\s?', ' ', ans) for ans in answer_explosion }
+    answer_explosion = answer_explosion | { re.sub(r'(\s?)\(.*?\)(\s?)', ' ', ans).strip() for ans in answer_explosion }
     # ignore special characters/punctuation/case
     answer_explosion = { unidecode.unidecode(ans) for ans in answer_explosion }
     answer_explosion = { ans.translate(str.maketrans('', '', string.punctuation)) for ans in answer_explosion }
