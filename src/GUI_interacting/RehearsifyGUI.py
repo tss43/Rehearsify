@@ -268,36 +268,45 @@ class RehearsifyGUI:
         """Open new window with prompt for question for which the corresponding sample is then looked up."""
 
         question = askstring( "Question lookup", "Question for which to find the sample:" )
-        self.sample = find_sample_from_question( self.score_df, question )
+        if question: 
+            try:
+                _sample = find_sample_from_question( self.score_df, question )        
+                
+                # update log treeview widget
+                update_dict = {
+                    'X/0':              "---",
+                    'Question':         f"{_sample.question}",
+                    'Correct answer':   f"{_sample.answer}",
+                    'User answer':      "",
+                    'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
+                self.log.insert('', index=0, values=list(update_dict.values()) )
 
-        self.practise_count += 1
+            except ValueError:
+                print("Question not found.")
+                return
 
-        # update log treeview widget
-        update_dict = {
-            'X/0':              "---",
-            'Question':         f"{self.sample.question}",
-            'Correct answer':   f"{self.sample.answer}",
-            'User answer':      "---",
-            'Wrong/total':      f"{self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
 
     def lookup_answer( self ):
         """Open new window with prompt for answer for which the corresponding sample is then looked up."""
 
         answer = askstring( "Answer lookup", "Answer for which to find the sample:" )
-        self.sample = find_sample_from_answer( self.score_df, answer )
+        if answer: 
+            try:
+                _sample = find_sample_from_answer( self.score_df, answer )
 
-        self.practise_count += 1
+                # update log treeview widget
+                update_dict = {
+                    'X/0':              "---",
+                    'Question':         f"{_sample.question}",
+                    'Correct answer':   f"{_sample.answer}",
+                    'User answer':      "",
+                    'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
+                self.log.insert('', index=0, values=list(update_dict.values()) )
 
-        # update log treeview widget
-        update_dict = {
-            'X/0':              "---",
-            'Question':         f"{self.sample.question}",
-            'Correct answer':   f"{self.sample.answer}",
-            'User answer':      "---",
-            'Wrong/total':      f"{self.sample.wrong}/{self.sample.total}" }
-        self.log.insert('', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
+            except ValueError:
+                print("Question not found.")
+                return
 
 
     def mark_correct( self ):
@@ -307,6 +316,9 @@ class RehearsifyGUI:
         previous_correct_answer = self.log.set( item=str(self.practise_count), column='Correct answer' )
         previous_user_answer = self.log.set( item=str(self.practise_count), column='User answer' )
         
+        if not previous_user_answer: 
+            return 
+
         previous_answer_is_correct = check_answer( previous_user_answer, previous_correct_answer ) 
         
         if not previous_answer_is_correct:
