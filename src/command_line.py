@@ -5,7 +5,7 @@ import sys
 
 import pandas as pd
 
-from misc.compute_statistics import compute_statitics
+from misc.compute_statistics import compute_statistics
 from misc.find_duplicates import find_duplicates
 from data_handling.file_handling import read_dictionary_txtfile
 
@@ -40,7 +40,7 @@ def script_compute_statistics():
             except KeyError("Attempted to open a corrupted DataFrame."):
                 print(f"Table should contain columns {COLUMNS}.")
             
-            stats_dict = compute_statitics(score_df)
+            stats_dict = compute_statistics(score_df)
 
             for stat_name, stat_val in stats_dict.items():
                 print(f"{stat_name}: {stat_val}")
