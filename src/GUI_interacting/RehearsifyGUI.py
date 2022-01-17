@@ -203,9 +203,7 @@ class RehearsifyGUI:
             defaultextension="pkl", 
             filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"),
              ("Text files", "*.txt")] )
-        if not filepath:
-            return
-        else:
+        if filepath: 
              # sort score_df by answer, ignoring the regex obtained from the user
             ignore_str = askstring( 
                 "Translation ordering for saving", "Strings to ignore in sorting translations (separated by '|'):" )
@@ -220,7 +218,7 @@ class RehearsifyGUI:
             elif filepath.endswith(".pkl"):
                 _score_df.to_pickle(filepath)
             
-        self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
+            self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
 
 
     def process_answer( self, event=None ):
@@ -315,13 +313,12 @@ class RehearsifyGUI:
         previous_question = self.log.set( item=str(self.practise_count), column='Question' )
         previous_correct_answer = self.log.set( item=str(self.practise_count), column='Correct answer' )
         previous_user_answer = self.log.set( item=str(self.practise_count), column='User answer' )
-        
-        if not previous_user_answer: 
-            return 
 
-        previous_answer_is_correct = check_answer( previous_user_answer, previous_correct_answer ) 
+        previous_user_answer_is_correct = check_answer( previous_user_answer, previous_correct_answer ) 
         
-        if not previous_answer_is_correct:
+        # correct only if previous user anwer was not empty indeed marked as wrong 
+        if previous_user_answer and not previous_user_answer_is_correct:
+            
             # find sample belonging to previous question in score_df 
             _sample = self.score_df[ self.score_df['question']==previous_question ].sample( n=1 ).squeeze()
             
@@ -331,7 +328,7 @@ class RehearsifyGUI:
             self.score_df[ self.score_df['question']==_sample.question ] = _sample
 
             # update counter
-            self.practise_wrong_count -= not previous_answer_is_correct
+            self.practise_wrong_count -= not previous_user_answer_is_correct
             self.counter_text.set( 
                 'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
             
