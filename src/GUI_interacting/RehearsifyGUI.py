@@ -6,6 +6,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.simpledialog import askstring
+from tkinter.messagebox import showinfo
 
 import pandas as pd
 
@@ -16,6 +17,7 @@ from src.translation_handling.update_dataframe import add_correct_answer, update
 
 from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
+from misc.compute_statistics import compute_statistics
 
 from src.constants import COLUMNS
 
@@ -30,18 +32,17 @@ class RehearsifyGUI:
         self.window = window
         self.practise_count = 0
         self.practise_wrong_count = 0
-        self.counter_text = tk.StringVar( window, value='session wrong/total: -/-' )
+        self.counter_text = tk.StringVar( window, value='session wrong/total practised: -/-' )
 
         self.score_df = pd.DataFrame( columns=COLUMNS )
         self.sample = pd.Series( index=COLUMNS ) 
         self.question = tk.StringVar( window, value='(questions)' )
         self.user_answer = tk.StringVar( window, value='(user input answers)' )
 
-        self.n_translations = self.score_df.shape[0]
         self.prev_practise_wrong_count = 0
         self.prev_practise_count = 0
-
-        self.stats_text = tk.StringVar( window, value='overall wrong/total/total entries: -/-/-' )
+        self.stats_text = tk.StringVar( window, value='overall wrong/total practised: -/-' )
+        
 
         # initialise the GUI
         self.initialise_GUI()
@@ -76,6 +77,8 @@ class RehearsifyGUI:
             self.btn_save = tk.Button( self.button_frame, text="Save as...", command=self.save_file )
             self.btn_lookup_question = tk.Button( self.button_frame, text="Lookup question", command=self.lookup_question )
             self.btn_lookup_answer = tk.Button( self.button_frame, text="Lookup answer", command=self.lookup_answer )
+            self.btn_dictionary_stats = tk.Button( 
+                self.button_frame, text="Dict statistics", command=self.display_dictionary_stats )
 
             self.question_answer_frame = tk.Frame( self.window, relief=tk.RAISED, bd=2 )
             self.question_prompt = tk.Label( self.question_answer_frame, textvariable=self.question )
@@ -97,12 +100,10 @@ class RehearsifyGUI:
         def place_widgets_on_grid( self ):
             """ Place the widgets on the GUI grid. """
             self.button_frame.grid(row=0, column=0, rowspan=3, sticky='NSEW')
-            self.button_frame.rowconfigure([0,1,3,4], weight=0)
-            self.button_frame.rowconfigure(2, minsize=25, weight=1)
+            self.button_frame.rowconfigure([0,1,3,4,5], weight=0)
+            self.button_frame.rowconfigure(2, weight=1)
+            self.button_frame.columnconfigure(0, minsize=150)
             self.btn_open.grid(row=0, column=0, padx=5)
-            self.btn_save.grid(row=1, column=0, padx=5)
-            self.btn_lookup_question.grid(row=3, column=0, padx=5)
-            self.btn_lookup_answer.grid(row=4, column=0, padx=5)
     
             self.question_answer_frame.grid(row=0, column=1, sticky='NSEW' )
             self.question_answer_frame.columnconfigure([0,1,3], weight=0)
@@ -172,14 +173,19 @@ class RehearsifyGUI:
         self.prev_practise_wrong_count = self.score_df['wrong'].sum()
         self.prev_practise_count = self.score_df['total'].sum()
         self.stats_text.set( 
-            'overall wrong/total/total entries: ' \
+            'overall wrong/total practised: ' \
             + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
-            + str(self.prev_practise_count+self.practise_count) + '/' \
-            + str(self.n_translations) )
+            + str(self.prev_practise_count+self.practise_count) )
 
-        # replace 'open' button with 'update...' button in GUI window
+        # replace 'Open' button with 'Update with ...' button and add 'Save as ...' button in GUI window
         self.btn_open.grid_remove() 
         self.btn_update.grid(row=0, column=0, padx=5)
+        self.btn_save.grid(row=1, column=0, padx=5)
+
+        # also add other buttons
+        self.btn_lookup_question.grid(row=3, column=0, padx=5)
+        self.btn_lookup_answer.grid(row=4, column=0, padx=5)
+        self.btn_dictionary_stats.grid(row=5,column=0, padx=5)
 
         self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
         
@@ -236,15 +242,15 @@ class RehearsifyGUI:
         # update counter
         self.practise_count += 1 
         self.practise_wrong_count += not answer_is_correct 
-        self.counter_text.set( 'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
+        self.counter_text.set( 
+            'session wrong/total practised: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
 
         # update overall stats counter
         self.stats_text.set( 
-            'overall wrong/total/total entries: ' \
+            'overall wrong/total practised: ' \
             + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
-            + str(self.prev_practise_count+self.practise_count) + '/' \
-            + str(self.n_translations) )
-            
+            + str(self.prev_practise_count+self.practise_count) )
+          
         # update score_df with new sample
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
@@ -257,7 +263,8 @@ class RehearsifyGUI:
             'Wrong/total':      f"{self.sample.wrong}/{self.sample.total}" }
         self.log.insert('', index=0, iid=self.practise_count, values=list(update_dict.values()) )
 
-        # update prompt with newly selected question
+
+        # select new question and update prompt
         self.sample = select_randomly_weighed_question( self.score_df )
         self.question.set(self.sample.question)
 
@@ -265,7 +272,7 @@ class RehearsifyGUI:
     def lookup_question( self ):
         """Open new window with prompt for question for which the corresponding sample is then looked up."""
 
-        question = askstring( "Question lookup", "Question for which to find the sample:" )
+        question = askstring( title="Question lookup", prompt="Question for which to find the sample:" )
         if question: 
             try:
                 _sample = find_sample_from_question( self.score_df, question )        
@@ -284,11 +291,10 @@ class RehearsifyGUI:
                 return
 
 
-
     def lookup_answer( self ):
         """Open new window with prompt for answer for which the corresponding sample is then looked up."""
 
-        answer = askstring( "Answer lookup", "Answer for which to find the sample:" )
+        answer = askstring( title="Answer lookup", prompt="Answer for which to find the sample:" )
         if answer: 
             try:
                 _sample = find_sample_from_answer( self.score_df, answer )
@@ -305,6 +311,16 @@ class RehearsifyGUI:
             except ValueError:
                 print("Question not found.")
                 return
+
+
+    def display_dictionary_stats( self ):
+        """Open new window displaying some general statistics about the translation dictionary."""
+        
+        stats_dict = compute_statistics(self.score_df)
+        
+
+        msg = '\n'.join([ ': '.join( [key, str(val)] ) for key, val in stats_dict.items() ] )
+        showinfo( title="Translation dictionary statistics", message=msg )
 
 
     def mark_correct( self ):
@@ -330,14 +346,13 @@ class RehearsifyGUI:
             # update counter
             self.practise_wrong_count -= not previous_user_answer_is_correct
             self.counter_text.set( 
-                'session wrong/total: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
+                'session wrong/total practised: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
             
             # update overall stats counter
             self.stats_text.set( 
-                'overall wrong/total/total entries: ' \
+                'overall wrong/total practised: ' \
                 + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
-                + str(self.prev_practise_count+self.practise_count) + '/' \
-                + str(self.n_translations) )
+                + str(self.prev_practise_count+self.practise_count) )
 
              # update log treeview widget
             update_dict = {
