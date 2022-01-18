@@ -255,12 +255,8 @@ class RehearsifyGUI:
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
         # update log treeview widget
-        update_dict = {
-            'X/0':              f"{'ooo' if answer_is_correct else 'xxx'}",
-            'Question':         f"{self.sample.question}",
-            'Correct answer':   f"{self.sample.answer}",
-            'User answer':      f"{self.user_answer}",
-            'Wrong/total':      f"{self.sample.wrong}/{self.sample.total}" }
+        update_dict = dict_to_insert_in_log(self.sample, self.user_answer, answer_is_correct) 
+
         self.log.insert('', index=0, iid=self.practise_count, values=list(update_dict.values()) )
 
 
@@ -278,17 +274,11 @@ class RehearsifyGUI:
                 _sample = find_sample_from_question( self.score_df, question )        
                 
                 # update log treeview widget
-                update_dict = {
-                    'X/0':              "---",
-                    'Question':         f"{_sample.question}",
-                    'Correct answer':   f"{_sample.answer}",
-                    'User answer':      "",
-                    'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
+                update_dict = dict_to_insert_in_log(_sample, "", None)  
                 self.log.insert('', index=0, values=list(update_dict.values()) )
 
             except ValueError:
                 print("Question not found.")
-                return
 
 
     def lookup_answer( self ):
@@ -300,17 +290,11 @@ class RehearsifyGUI:
                 _sample = find_sample_from_answer( self.score_df, answer )
 
                 # update log treeview widget
-                update_dict = {
-                    'X/0':              "---",
-                    'Question':         f"{_sample.question}",
-                    'Correct answer':   f"{_sample.answer}",
-                    'User answer':      "",
-                    'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
+                update_dict = update_dict = dict_to_insert_in_log(_sample, "", None)  
                 self.log.insert('', index=0, values=list(update_dict.values()) )
 
             except ValueError:
                 print("Question not found.")
-                return
 
 
     def display_dictionary_stats( self ):
@@ -355,12 +339,7 @@ class RehearsifyGUI:
                 + str(self.prev_practise_count+self.practise_count) )
 
              # update log treeview widget
-            update_dict = {
-                'X/0':              "ooo",
-                'Question':         f"{_sample.question}",
-                'Correct answer':   f"{_sample.answer}",
-                'User answer':      f"{previous_user_answer}",
-                'Wrong/total':      f"{_sample.wrong}/{_sample.total}" }
+            update_dict = dict_to_insert_in_log( _sample, previous_user_answer, True )
             self.log.delete( str(self.practise_count) )
             self.log.insert( '', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
@@ -369,8 +348,19 @@ class RehearsifyGUI:
                 self.sample = _sample 
 
 
-        
-        
+
+
+def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correct: bool|None ):
+    """Combine some metrics into a dict whose values can easily be inserted into the log."""
+
+    update_dict = {
+        'X/0':              f"{'ooo' if answer_is_correct else '---' if answer_is_correct is None else 'xxx'}",
+        'Question':         f"{sample.question}",
+        'Correct answer':   f"{sample.answer}",
+        'User answer':      f"{user_answer}",
+        'Wrong/total':      f"{sample.wrong}/{sample.total}" }
+    
+    return update_dict      
 
 
 
