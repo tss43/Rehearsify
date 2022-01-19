@@ -194,9 +194,7 @@ class RehearsifyGUI:
         """Update the file by adding new words from a .txt and removing words that are not in this .txt."""
 
         filepath = askopenfilename( filetypes=[("Text files", "*.txt")] )
-        if not filepath:
-            return
-        elif filepath.endswith(".txt"):
+        if filepath:
             _temp_df = read_dictionary_txtfile( filepath )
             self.score_df = update_with_df( self.score_df, _temp_df )  
 
@@ -256,7 +254,6 @@ class RehearsifyGUI:
 
         # update log treeview widget
         update_dict = dict_to_insert_in_log(self.sample, self.user_answer, answer_is_correct) 
-
         self.log.insert('', index=0, iid=self.practise_count, values=list(update_dict.values()) )
 
 
