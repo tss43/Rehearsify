@@ -10,7 +10,8 @@ from tkinter.messagebox import showinfo
 
 import pandas as pd
 
-from src.data_handling.file_handling import read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile
+from src.data_handling.file_handling import (
+    read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, validate_translation_dictionary)
 from src.translation_handling.question_selecting import select_randomly_weighed_question
 from src.translation_handling.answer_handling import check_answer
 from src.translation_handling.update_dataframe import add_correct_answer, update_sample_score, decrement_sample_wrong_score
@@ -156,10 +157,8 @@ class RehearsifyGUI:
         elif filepath.endswith(".pkl"):
             self.score_df = pd.read_pickle( filepath )
 
-        try:
-            self.score_df = self.score_df[COLUMNS]
-        except KeyError("Attempted to open a corrupted DataFrame."):
-            print(f"Table should contain columns {COLUMNS}.")
+        # validate opened score_df
+        self.score_df = validate_translation_dictionary(self.score_df)
 
         # update prompt with first selected question
         self.sample = select_randomly_weighed_question( self.score_df )

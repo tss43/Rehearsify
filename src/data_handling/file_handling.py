@@ -1,9 +1,12 @@
 # data_handling/file_handling.py
 
+
 import numpy as np
 import pandas as pd
 
-from src.constants import COLUMNS 
+from misc.find_duplicates import find_duplicates
+
+from src.constants import COLUMNS, COLUMN_DTYPES
 
 
 def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
@@ -52,3 +55,27 @@ def save_as_dictionary_txtfile(filepath: str, score_df: pd.DataFrame):
         dict_txtfile.writelines( [ ''.join(transl) + '\n' for transl in zip(answer_array, eq_sign_list, question_array) ] )
 
 
+def validate_translation_dictionary(score_df: pd.DataFrame) -> pd.DataFrame:
+    """Validate a score_df on opening."""
+
+    # check if required columns are present
+    try:
+        score_df = score_df[COLUMNS]
+    except KeyError("Attempted to open a corrupted DataFrame."):
+        print(f"Table should contain columns {COLUMNS}.")
+
+    # check column types
+    if any( score_df.dtypes != COLUMN_DTYPES ):
+        raise TypeError("DataFrame has inappropriate column types.")
+
+    # check if df contains duplicate questions
+    duplicates_set = find_duplicates(score_df)
+    if duplicates_set:
+        raise ValueError(f"Duplicate question entries are:\n {duplicates_set}.")
+
+    # check if df contains empty question and answer columns
+    mask_empty_question_answer = score_df.question.str.fullmatch( '' ) | score_df.answer.str.fullmatch( '' )  
+    if any( mask_empty_question_answer ):
+        raise ValueError(f"DataFrame contains empty rows:\n {score_df[mask_empty_question_answer]}.")
+
+    return score_df
