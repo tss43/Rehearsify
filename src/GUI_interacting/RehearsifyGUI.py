@@ -20,7 +20,7 @@ from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
 from misc.compute_statistics import compute_statistics
 
-from src.constants import COLUMNS
+from src.constants import COLUMNS, DISPLAY_COLUMNS
 
 
 class RehearsifyGUI:
@@ -31,46 +31,33 @@ class RehearsifyGUI:
 
         #instance attributes
         self.window = window
-        self.practise_count = 0
-        self.practise_wrong_count = 0
-        self.counter_text = tk.StringVar( window, value='session wrong/total practised: -/-' )
+        self.initialise_attributes()       
 
-        self.score_df = pd.DataFrame( columns=COLUMNS )
-        self.sample = pd.Series( index=COLUMNS ) 
-        self.question = tk.StringVar( window, value='(questions)' )
-        self.user_answer = tk.StringVar( window, value='(user input answers)' )
-
-        self.prev_practise_wrong_count = 0
-        self.prev_practise_count = 0
-        self.stats_text = tk.StringVar( window, value='overall wrong/total practised: -/-' )
-        
+        self.question = tk.StringVar( self.window, value='(questions)' )
+        self.user_answer = tk.StringVar( self.window, value='(user input answers)' )
 
         # initialise the GUI
         self.initialise_GUI()
  
 
     #instance methods
+    def initialise_attributes( self ):
+        """Initialise the instance attributes."""
+
+        self.score_df = pd.DataFrame( columns=COLUMNS )
+        self.sample = pd.Series( index=COLUMNS ) 
+
+        self.practise_count = 0
+        self.practise_wrong_count = 0
+        self.prev_practise_wrong_count = 0
+        self.prev_practise_count = 0   
+
+
     def initialise_GUI( self ):
         """ Initialise the GUI. """
                
         def define_widgets( self ):
             """ Define the widgets. """
-
-            def initialise_log( self ):
-                """ Initialise the log in the GUI. """
-                self.log.heading('#0', text='', anchor=tk.CENTER)
-                self.log.heading('#1', text='X/O', anchor=tk.CENTER)
-                self.log.heading('#2', text='Question', anchor=tk.CENTER)
-                self.log.heading('#3', text='Correct answer', anchor=tk.CENTER)
-                self.log.heading('#4', text='User answer', anchor=tk.CENTER)
-                self.log.heading('#5', text='Wrong/total', anchor=tk.CENTER)
-
-                self.log.column('#0', width=0,  stretch=tk.NO)
-                self.log.column('#1', width=35, minwidth=35, stretch=tk.NO, anchor=tk.CENTER)
-                self.log.column('#2', width=150, minwidth=150, stretch=tk.YES)
-                self.log.column('#3', width=280, minwidth=280, stretch=tk.YES)
-                self.log.column('#4', width=280, minwidth=280, stretch=tk.YES)
-                self.log.column('#5', width=75, minwidth=75, stretch=tk.NO, anchor=tk.CENTER)
 
             self.button_frame = tk.Frame(self.window, relief=tk.RAISED, bd=2)
             self.btn_open = tk.Button( self.button_frame, text="Open", command=self.open_file )
@@ -88,21 +75,20 @@ class RehearsifyGUI:
             self.answer_entry.bind( '<Return>', self.process_answer )    
             self.go_btn = tk.Button( self.question_answer_frame, text="Go", command = self.process_answer )
 
-            self.log = ttk.Treeview( 
-                self.window, columns=('X/O', 'Question', 'Correct answer', 'User answer', 'Wrong/total') )
-            initialise_log( self ) 
+            self.log = ttk.Treeview( self.window, columns=DISPLAY_COLUMNS )
+            self.initialise_log()
 
             self.lower_frame = tk.Frame( self.window )
             self.mark_correct_btn = tk.Button( self.lower_frame, text="Mark previous correct", command=self.mark_correct )
-            self.counter = tk.Label( self.lower_frame, font=('', 10), textvariable=self.counter_text )
-            self.stats = tk.Label( self.lower_frame, font=('', 10), textvariable=self.stats_text  )
+            self.counter = tk.Label( self.lower_frame, font=('', 10), text="session wrong/total practised: -/-" )
+            self.stats = tk.Label( self.lower_frame, font=('', 10), text="overall wrong/total practised: -/-"  )
             
 
         def place_widgets_on_grid( self ):
             """ Place the widgets on the GUI grid. """
             self.button_frame.grid(row=0, column=0, rowspan=3, sticky='NSEW')
-            self.button_frame.rowconfigure([0,1,3,4,5], weight=0)
-            self.button_frame.rowconfigure(2, weight=1)
+            self.button_frame.rowconfigure([0,1,2,4,5,6], weight=0)
+            self.button_frame.rowconfigure(3, weight=1)
             self.button_frame.columnconfigure(0, minsize=150)
             self.btn_open.grid(row=0, column=0, padx=5)
     
@@ -129,9 +115,8 @@ class RehearsifyGUI:
         self.window.geometry("600x200")
         self.window.columnconfigure(0, weight=0)
         self.window.columnconfigure(1, weight=1)
-        self.window.rowconfigure(0, weight=0)
+        self.window.rowconfigure([0,2], weight=0)
         self.window.rowconfigure(1, weight=1)
-        self.window.rowconfigure(2, weight=0)
 
         # define widgets
         define_widgets( self )
@@ -139,12 +124,39 @@ class RehearsifyGUI:
         # place widgets on grid
         place_widgets_on_grid( self )
 
+
+    def initialise_log( self ):
+        """ Initialise the log in the GUI. """
         
+        self.log.heading('#0', text='', anchor=tk.CENTER)
+        for col_idx, col in enumerate(DISPLAY_COLUMNS):
+            self.log.heading(f'#{col_idx+1}', text=col, anchor=tk.CENTER)   
+        
+        self.log.column('#0', width=0,  stretch=tk.NO)
+        self.log.column('#1', width=35, minwidth=35, stretch=tk.NO, anchor=tk.CENTER)
+        self.log.column('#2', width=150, minwidth=150, stretch=tk.YES)
+        self.log.column('#3', width=280, minwidth=280, stretch=tk.YES)
+        self.log.column('#4', width=280, minwidth=280, stretch=tk.YES)
+        self.log.column('#5', width=75, minwidth=75, stretch=tk.NO, anchor=tk.CENTER)
+
+
     def open_file( self ):
         """Open a dictionary file for practising."""
         
+        # reinitialise attributes in case a file is opened on top of an old one. 
+        if self.practise_count > 0:
+            self.initialise_attributes()
+            
+            self.counter.config(text="session wrong/total practised: -/-")
+            self.stats.config(text="overall wrong/total practised: -/-")
+
+            # redefine and reinitialise the log to clear up the question/answers and their indices
+            self.log = ttk.Treeview( self.window, columns=DISPLAY_COLUMNS )
+            self.initialise_log()
+            self.log.grid(row=1,column=1, sticky='NSEW', padx=5, pady=1 )
+
         filepath = askopenfilename( 
-            filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"), 
+            filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", ("*.xls")), ("XLSX files", "*.xlsx"), 
             ("Text files", "*.txt")] )
         if not filepath:
             return
@@ -171,20 +183,20 @@ class RehearsifyGUI:
         self.n_translations = self.score_df.shape[0] 
         self.prev_practise_wrong_count = self.score_df['wrong'].sum()
         self.prev_practise_count = self.score_df['total'].sum()
-        self.stats_text.set( 
-            'overall wrong/total practised: ' \
+        self.stats.config( 
+            text='overall wrong/total practised: ' \
             + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
             + str(self.prev_practise_count+self.practise_count) )
 
-        # replace 'Open' button with 'Update with ...' button and add 'Save as ...' button in GUI window
-        self.btn_open.grid_remove() 
-        self.btn_update.grid(row=0, column=0, padx=5)
-        self.btn_save.grid(row=1, column=0, padx=5)
+        # update 'open' button text
+        self.btn_open.config(text="Open new")  
 
-        # also add other buttons
-        self.btn_lookup_question.grid(row=3, column=0, padx=5)
-        self.btn_lookup_answer.grid(row=4, column=0, padx=5)
-        self.btn_dictionary_stats.grid(row=5,column=0, padx=5)
+        # add other buttons
+        self.btn_update.grid(row=1, column=0, padx=5)
+        self.btn_save.grid(row=2, column=0, padx=5)
+        self.btn_lookup_question.grid(row=4, column=0, padx=5)
+        self.btn_lookup_answer.grid(row=5, column=0, padx=5)
+        self.btn_dictionary_stats.grid(row=6,column=0, padx=5)
 
         self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
         
@@ -239,12 +251,12 @@ class RehearsifyGUI:
         # update counter
         self.practise_count += 1 
         self.practise_wrong_count += not answer_is_correct 
-        self.counter_text.set( 
-            'session wrong/total practised: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
+        self.counter.config( 
+            text='session wrong/total practised: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
 
         # update overall stats counter
-        self.stats_text.set( 
-            'overall wrong/total practised: ' \
+        self.stats.config( 
+            text='overall wrong/total practised: ' \
             + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
             + str(self.prev_practise_count+self.practise_count) )
           
@@ -325,12 +337,12 @@ class RehearsifyGUI:
 
             # update counter
             self.practise_wrong_count -= not previous_user_answer_is_correct
-            self.counter_text.set( 
-                'session wrong/total practised: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
+            self.counter.config( 
+                text='session wrong/total practised: ' + str(self.practise_wrong_count) + '/' + str(self.practise_count) )
             
             # update overall stats counter
-            self.stats_text.set( 
-                'overall wrong/total practised: ' \
+            self.stats.config( 
+                text='overall wrong/total practised: ' \
                 + str(self.prev_practise_wrong_count+self.practise_wrong_count) + '/' \
                 + str(self.prev_practise_count+self.practise_count) )
 
