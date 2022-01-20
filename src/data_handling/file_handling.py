@@ -68,14 +68,20 @@ def validate_translation_dictionary(score_df: pd.DataFrame) -> pd.DataFrame:
     if any( score_df.dtypes != COLUMN_DTYPES ):
         raise TypeError("DataFrame has inappropriate column types.")
 
+    # check if df contains empty question and answer columns
+    mask_empty_question_answer = (score_df['question']=='') | (score_df['answer']=='')
+    if any( mask_empty_question_answer ):
+        raise ValueError(f"DataFrame contains empty rows:\n {score_df[mask_empty_question_answer]}.")
+
+    mask_invalid_score = (score_df['wrong'] < 0) | (score_df['total'] < 0)
+    mask_invalid_perc_score = (score_df['wrong_perc'] < 0) | (score_df['wrong_perc'] > 100)
+    if any( mask_invalid_score ) | any( mask_invalid_perc_score ):
+        raise ValueError(f"DataFrame contains corrupted rows:\n {score_df[mask_invalid_score | mask_invalid_perc_score]}.")
+
     # check if df contains duplicate questions
     duplicates_set = find_duplicates(score_df)
     if duplicates_set:
         raise ValueError(f"Duplicate question entries are:\n {duplicates_set}.")
 
-    # check if df contains empty question and answer columns
-    mask_empty_question_answer = score_df.question.str.fullmatch( '' ) | score_df.answer.str.fullmatch( '' )  
-    if any( mask_empty_question_answer ):
-        raise ValueError(f"DataFrame contains empty rows:\n {score_df[mask_empty_question_answer]}.")
 
     return score_df
