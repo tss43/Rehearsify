@@ -11,7 +11,8 @@ from tkinter.messagebox import showinfo
 import pandas as pd
 
 from src.data_handling.file_handling import (
-    read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, validate_translation_dictionary)
+    read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, 
+    validate_translation_dictionary, validate_ignore_str )
 from src.translation_handling.question_selecting import select_randomly_weighed_question
 from src.translation_handling.answer_handling import check_answer
 from src.translation_handling.update_dataframe import add_correct_answer, update_sample_score, decrement_sample_wrong_score
@@ -155,22 +156,27 @@ class RehearsifyGUI:
             self.initialise_log()
             self.log.grid(row=1,column=1, sticky='NSEW', padx=5, pady=1 )
 
-        filepath = askopenfilename( 
-            filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", ("*.xls")), ("XLSX files", "*.xlsx"), 
-            ("Text files", "*.txt")] )
-        if not filepath:
-            return
-        elif filepath.endswith(".txt"):
-            self.score_df = read_dictionary_txtfile( filepath )
-        elif filepath.endswith("csv"):
-            self.score_df = pd.read_csv( filepath )
-        elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
-            self.score_df = pd.read_excel( filepath )
-        elif filepath.endswith(".pkl"):
-            self.score_df = pd.read_pickle( filepath )
+        try:
+            filepath = askopenfilename( 
+                filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", ("*.xls")), 
+                ("XLSX files", "*.xlsx"), ("Text files", "*.txt")] )
+            if not filepath:
+                return
+            elif filepath.endswith(".txt"):
+                self.score_df = read_dictionary_txtfile( filepath )
+            elif filepath.endswith("csv"):
+                self.score_df = pd.read_csv( filepath )
+            elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
+                self.score_df = pd.read_excel( filepath )
+            elif filepath.endswith(".pkl"):
+                self.score_df = pd.read_pickle( filepath )
 
-        # validate opened score_df
-        self.score_df = validate_translation_dictionary(self.score_df)
+            # validate opened score_df
+            validate_translation_dictionary(self.score_df)
+        except (KeyError, TypeError, ValueError) as e: 
+            print(f"error {e!r}")
+            return
+
 
         # update prompt with first selected question
         self.sample = select_randomly_weighed_question( self.score_df )
@@ -220,8 +226,15 @@ class RehearsifyGUI:
              ("Text files", "*.txt")] )
         if filepath: 
              # sort score_df by answer, ignoring the regex obtained from the user
-            ignore_str = askstring( 
-                "Translation ordering for saving", "Strings to ignore in sorting translations (separated by '|'):" )
+
+            ignore_str = None 
+            while ignore_str is None:
+                try:
+                    ignore_str = askstring( 
+                        "Translation ordering for saving", "Strings to ignore in sorting translations (separated by '|'):" )
+                    validate_ignore_str( ignore_str )
+                except ValueError as e: 
+                    print(f"error {e!r}")
             _score_df = sort_df( self.score_df, ignore_str )
             
             if filepath.endswith(".txt"):

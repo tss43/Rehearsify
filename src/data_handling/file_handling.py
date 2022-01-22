@@ -55,7 +55,7 @@ def save_as_dictionary_txtfile(filepath: str, score_df: pd.DataFrame):
         dict_txtfile.writelines( [ ''.join(transl) + '\n' for transl in zip(answer_array, eq_sign_list, question_array) ] )
 
 
-def validate_translation_dictionary(score_df: pd.DataFrame) -> pd.DataFrame:
+def validate_translation_dictionary(score_df: pd.DataFrame):
     """Validate a score_df on opening."""
 
     # check if required columns are present
@@ -84,4 +84,9 @@ def validate_translation_dictionary(score_df: pd.DataFrame) -> pd.DataFrame:
         raise ValueError(f"Duplicate question entries are:\n {duplicates_set}.")
 
 
-    return score_df
+
+def validate_ignore_str(ignore_str: str):
+    """Validate an ignore_str string given by the user for proper regex purposes."""
+
+    if '\\' in ignore_str:
+        raise ValueError("Ignore string cannot contain '\\'.")
