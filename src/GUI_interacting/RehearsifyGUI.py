@@ -378,7 +378,7 @@ def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correc
     """Combine some metrics into a dict whose values can easily be inserted into the log."""
     
     update_dict = {
-        'X/0':              f"{'---' if answer_is_correct is None else 'ooo' if answer_is_correct else 'xxx'}",
+        'X/O':              f"{'---' if answer_is_correct is None else 'ooo' if answer_is_correct else 'xxx'}",
         'Question':         f"{sample.question}",
         'Correct answer':   f"{sample.answer}",
         'User answer':      f"{user_answer}",
