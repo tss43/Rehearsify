@@ -59,10 +59,9 @@ def validate_translation_dictionary(score_df: pd.DataFrame):
     """Validate a score_df on opening."""
 
     # check if required columns are present
-    try:
-        score_df = score_df[COLUMNS]
-    except KeyError("Attempted to open a corrupted DataFrame."):
-        print(f"Table should contain columns {COLUMNS}.")
+    if not all( [col in COLUMNS for col in score_df.columns]  ):
+        raise  KeyError(f"Attempted to open a corrupted DataFrame: should contain columns {COLUMNS}.")
+
 
     # check column types
     if any( score_df.dtypes != COLUMN_DTYPES ):
