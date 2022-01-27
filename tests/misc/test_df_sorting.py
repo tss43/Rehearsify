@@ -66,7 +66,8 @@ class TestDfSorting(unittest.TestCase):
             
             sorted_score_df = sort_df(score_df, ignore_str)
             
-            assert_frame_equal( sorted_score_df.reset_index(drop=True), expected_sorted_score_df )
+            with self.subTest(f"{sorted_score_df} with ignore_str {ignore_str} -> {expected_sorted_score_df}"): 
+                assert_frame_equal( sorted_score_df.reset_index(drop=True), expected_sorted_score_df )
 
             
 
