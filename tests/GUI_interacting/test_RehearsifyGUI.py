@@ -25,8 +25,8 @@ class TestRehearsifyGUI(unittest.TestCase):
 class TestLogInsertionDict(unittest.TestCase):
     """ Tests on the dict used to insert new entries into RehearsifyGUI objects. """
 
-    def test_dict_to_insert_in_log(self):
-        """ Test if the dict to insert has appropriate columns. """ 
+    def test_keys_of_dict_to_insert_in_log(self):
+        """ Test if the dict to insert has appropriate keys. """ 
         
         expected_keys = DISPLAY_COLUMNS
 

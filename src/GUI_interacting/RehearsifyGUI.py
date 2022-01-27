@@ -19,7 +19,7 @@ from src.translation_handling.update_dataframe import add_correct_answer, update
 
 from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
-from misc.compute_statistics import compute_statistics
+from src.misc.compute_statistics import compute_statistics
 
 from src.constants import COLUMNS, DISPLAY_COLUMNS
 
