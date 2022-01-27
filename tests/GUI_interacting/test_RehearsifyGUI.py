@@ -4,6 +4,7 @@
 import unittest
 
 import pandas as pd
+import itertools
 
 from src.translation_handling.answer_handling import check_answer
 from src.GUI_interacting.RehearsifyGUI import dict_to_insert_in_log
@@ -35,7 +36,7 @@ class TestLogInsertionDict(unittest.TestCase):
             pd.Series(data=['test_question0', 'test_answer0', 50., 1, 2], index=COLUMNS),
             pd.Series(data=['test_question1', 'test_answer1', 25., 1, 4], index=COLUMNS) ]
         
-        for user_answer, sample in zip(user_answer_list, sample_list):
+        for user_answer, sample in itertools.product(user_answer_list, sample_list):
             answer_is_correct = check_answer( user_answer, sample.answer ) 
             test_dict = dict_to_insert_in_log( sample, user_answer, answer_is_correct )
     
