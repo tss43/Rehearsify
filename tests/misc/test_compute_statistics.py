@@ -1,13 +1,10 @@
 # tests/misc/test_compute_statistics.py
 
-
 import unittest
 from numpy.testing import assert_array_equal      # for testing array equality, without raising NaN comparison exceptions
 
-
 import pandas as pd
 import numpy as np
-
 
 from src.misc.compute_statistics import compute_statistics
 
