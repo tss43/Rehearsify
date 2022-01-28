@@ -180,8 +180,7 @@ class RehearsifyGUI:
         except (KeyError, TypeError, ValueError) as e: 
             print(f"error {e!r}")
             return
-
-        
+      
         # update prompt with first selected question
         self.sample = select_randomly_weighed_question( self.score_df )
         self.question.set(self.sample.question)
