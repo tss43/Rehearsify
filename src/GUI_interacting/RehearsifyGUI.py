@@ -171,6 +171,9 @@ class RehearsifyGUI:
             elif filepath.endswith(".pkl"):
                 self.score_df = pd.read_pickle( filepath )
 
+            # keep only requisite columns
+            self.score_df = self.score_df[COLUMNS]
+
             # validate opened score_df
             validate_translation_dictionary(self.score_df)
 
@@ -178,8 +181,6 @@ class RehearsifyGUI:
             print(f"error {e!r}")
             return
 
-        # keep only requisite columns
-        self.score_df = self.score_df[COLUMNS]
         
         # update prompt with first selected question
         self.sample = select_randomly_weighed_question( self.score_df )
