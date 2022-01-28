@@ -14,13 +14,13 @@ from src.constants import COLUMNS, DISPLAY_COLUMNS
 class TestRehearsifyGUI(unittest.TestCase):
     """ Tests on RehearsifyGUI and its methods. """
 
-    def setUp(self) -> None:
+    def setUp(self):
         """ Initialise attributes available for tests in class. """
-        return super().setUp()
+        pass
 
-    def tearDown(self) -> None:
+    def tearDown(self):
         """ Deinitialise attributes available for tests in class. """
-        return super().tearDown()
+        pass
 
 
 class TestLogInsertionDict(unittest.TestCase):
