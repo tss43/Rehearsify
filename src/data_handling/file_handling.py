@@ -28,15 +28,15 @@ def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
 
 
 def update_with_df(score_df: pd.DataFrame, _temp_df: pd.DataFrame) -> pd.DataFrame:
-    """ Update the score df with the words from the dictionary .txt in the given filepath. """
+    """ Update the score df with the words from temp df. """
 
-    # keeping only words from df that are in .txt
+    # keeping only words from score_df that are in _temp_df
     mask_intersection = np.all( np.isin( score_df[COLUMNS[:2]].to_numpy(), _temp_df[COLUMNS[:2]].to_numpy() ), axis=1 )
     _intersection_df = score_df[mask_intersection]
     
-    # adding words only in .txt to df
+    # adding words only in ._temp_df to score_df
     mask_ldiff = np.all( np.isin( _temp_df[COLUMNS[:2]].to_numpy(), score_df[COLUMNS[:2]].to_numpy(), invert=True ), axis=1 )
-    _ldiff_df = score_df[mask_ldiff]
+    _ldiff_df = _temp_df[mask_ldiff]
     
     _score_df = _intersection_df.append( _ldiff_df )
 
@@ -81,7 +81,6 @@ def validate_translation_dictionary(score_df: pd.DataFrame):
     duplicates_set = find_duplicates(score_df)
     if duplicates_set:
         raise ValueError(f"Duplicate question entries are:\n {duplicates_set}.")
-
 
 
 def validate_ignore_str(ignore_str: str):
