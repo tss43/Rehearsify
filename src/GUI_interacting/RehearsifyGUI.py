@@ -13,7 +13,7 @@ import pandas as pd
 from src.data_handling.file_handling import (
     read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, 
     validate_translation_dictionary, validate_ignore_str )
-from src.translation_handling.question_selecting import select_randomly_weighed_question
+from src.translation_handling.question_selecting import select_randomly_weighted_question
 from src.translation_handling.answer_handling import check_answer
 from src.translation_handling.update_dataframe import add_correct_answer, update_sample_score, decrement_sample_wrong_score
 
@@ -285,7 +285,7 @@ class RehearsifyGUI:
 
 
         # select new question and update prompt
-        self.sample = select_randomly_weighed_question( self.score_df )
+        self.sample = select_randomly_weighted_question( self.score_df )
         self.question.set(self.sample.question)
 
 
