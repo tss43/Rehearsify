@@ -2,8 +2,6 @@
 
 import unittest
 
-import itertools
-
 from src.translation_handling.answer_handling import check_answer, explode_answer
 
 class TestAnswerHandling(unittest.TestCase):
