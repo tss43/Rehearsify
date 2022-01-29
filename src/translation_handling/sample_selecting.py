@@ -1,8 +1,8 @@
-# translation_handling/question_selecting.py
+# translation_handling/sample_selecting.py
 
 import pandas as pd
 
-def select_randomly_weighted_question( score_df: pd.DataFrame, seed=None ) -> pd.Series:
+def select_randomly_weighted_sample( score_df: pd.DataFrame, seed=None ) -> pd.Series:
     """ select a randomly selected word from the score df, weighted by percentage wrong if possible """
 
     # take a random sample out of all rows, weighted by the percentage wrong. Replacing NaNs -> 10% for unpractised translations,
@@ -12,6 +12,6 @@ def select_randomly_weighted_question( score_df: pd.DataFrame, seed=None ) -> pd
 
     return sample 
 
-def select_ML_question( score_df: pd.DataFrame ) -> pd.Series:
+def select_ML_sample( score_df: pd.DataFrame ) -> pd.Series:
     """ DESCRIPTION """
     pass
