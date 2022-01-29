@@ -11,7 +11,7 @@ from src.data_handling.file_handling import read_dictionary_txtfile, save_as_dic
 
 from constants import COLUMNS
 
-class FileHandling(unittest.TestCase):
+class TestFileHandling(unittest.TestCase):
     """ Tests of handling files. """
     
     def setUp(self):
