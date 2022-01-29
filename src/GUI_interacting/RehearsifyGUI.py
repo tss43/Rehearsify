@@ -15,7 +15,7 @@ from src.data_handling.file_handling import (
     validate_translation_dictionary, validate_ignore_str )
 from src.translation_handling.sample_selecting import select_randomly_weighted_sample
 from src.translation_handling.answer_handling import check_answer
-from src.translation_handling.update_dataframe import add_correct_answer, update_sample_score, decrement_sample_wrong_score
+from translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
 
 from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
@@ -182,7 +182,7 @@ class RehearsifyGUI:
             return
       
         # update prompt with first selected question
-        self.sample = select_randomly_weighed_question( self.score_df )
+        self.sample = select_randomly_weighted_sample( self.score_df )
         self.question.set(self.sample.question)
         
         # remove pre-initialisation default answer
