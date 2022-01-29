@@ -7,7 +7,7 @@ from pandas.testing import assert_series_equal      # for testing pandas series
 import pandas as pd
 import numpy as np
 
-from translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
+from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
 
 from constants import COLUMNS
 

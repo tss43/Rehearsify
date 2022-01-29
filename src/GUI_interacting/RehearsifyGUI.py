@@ -15,7 +15,7 @@ from src.data_handling.file_handling import (
     validate_translation_dictionary, validate_ignore_str )
 from src.translation_handling.sample_selecting import select_randomly_weighted_sample
 from src.translation_handling.answer_handling import check_answer
-from translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
+from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
 
 from src.misc.df_sorting import sort_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
@@ -32,7 +32,7 @@ class RehearsifyGUI:
 
         #instance attributes
         self.window = window
-        self.initialise_attributes()       
+        self.initialise_var_attributes()       
 
         self.question = tk.StringVar( self.window, value='(questions)' )
         self.user_answer = tk.StringVar( self.window, value='(user input answers)' )
@@ -42,7 +42,7 @@ class RehearsifyGUI:
  
 
     #instance methods
-    def initialise_attributes( self ):
+    def initialise_var_attributes( self ):
         """Initialise the instance attributes."""
 
         self.score_df = pd.DataFrame( columns=COLUMNS )
@@ -50,17 +50,16 @@ class RehearsifyGUI:
 
         self.practise_count = 0
         self.practise_wrong_count = 0
+        self.prev_practise_count = 0  
         self.prev_practise_wrong_count = 0
-        self.prev_practise_count = 0   
-
-
+         
     def initialise_GUI( self ):
         """ Initialise the GUI. """
                
         def define_widgets( self ):
             """ Define the widgets. """
-
-            self.button_frame = tk.Frame(self.window, relief=tk.RAISED, bd=2)
+            
+            self.button_frame = tk.Frame( self.window, relief=tk.RAISED, bd=2 )
             self.btn_open = tk.Button( self.button_frame, text="Open", command=self.open_file )
             self.btn_update = tk.Button( self.button_frame, text="Update with...", command=self.update_file )
             self.btn_save = tk.Button( self.button_frame, text="Save as...", command=self.save_file )
@@ -68,7 +67,7 @@ class RehearsifyGUI:
             self.btn_lookup_answer = tk.Button( self.button_frame, text="Lookup answer", command=self.lookup_answer )
             self.btn_dictionary_stats = tk.Button( 
                 self.button_frame, text="Dict statistics", command=self.display_dictionary_stats )
-
+            
             self.question_answer_frame = tk.Frame( self.window, relief=tk.RAISED, bd=2 )
             self.question_prompt = tk.Label( self.question_answer_frame, textvariable=self.question )
             self.equal_sign = tk.Label( self.question_answer_frame, text=" = " )
@@ -370,8 +369,6 @@ class RehearsifyGUI:
             # update the sample belonging to the current question if it was immediately repeated
             if previous_question==self.sample.question:
                 self.sample = _sample 
-
-
 
 
 def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correct: bool|None ):
