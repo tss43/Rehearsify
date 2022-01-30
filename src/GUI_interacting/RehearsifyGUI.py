@@ -143,9 +143,15 @@ class RehearsifyGUI:
     def open_file( self ):
         """Open a dictionary file for practising."""
         
+        filepath = askopenfilename( 
+            filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", ("*.xls")), 
+            ("XLSX files", "*.xlsx"), ("Text files", "*.txt")] )
+        if not filepath:
+            return
+
         # reinitialise attributes in case a file is opened on top of an old one. 
         if self.practise_count > 0:
-            self.initialise_attributes()
+            self.initialise_var_attributes()
             
             self.counter.config(text="session wrong/total practised: -/-")
             self.stats.config(text="overall wrong/total practised: -/-")
@@ -156,12 +162,7 @@ class RehearsifyGUI:
             self.log.grid(row=1,column=1, sticky='NSEW', padx=5, pady=1 )
 
         try:
-            filepath = askopenfilename( 
-                filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", ("*.xls")), 
-                ("XLSX files", "*.xlsx"), ("Text files", "*.txt")] )
-            if not filepath:
-                return
-            elif filepath.endswith(".txt"):
+            if filepath.endswith(".txt"):
                 self.score_df = read_dictionary_txtfile( filepath )
             elif filepath.endswith("csv"):
                 self.score_df = pd.read_csv( filepath )
