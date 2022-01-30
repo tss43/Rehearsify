@@ -1,0 +1,7 @@
+,question,answer,wrong_perc,wrong,total
+0,the (large) error,de (grote) fout,0.0,0,1
+4,the language,de taal,0.0,0,1
+2,the telephone,de telefoon,100.0,1,1
+1,the university,de universiteit,,0,0
+3,a beer,een biertje,,0,0
+5,to rehearse,instuderen; herhalen,0.0,0,2
