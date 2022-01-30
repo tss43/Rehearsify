@@ -1,4 +1,4 @@
 # Rehearsify
 
--> add user instruction pictures
+[Initial screen](Initial_screen.png)
 
