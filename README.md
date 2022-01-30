@@ -1,4 +1,4 @@
 # Rehearsify
 
-[Initial screen](Initial_screen.png)
+[Initial screen](./docs/Initial_screen.png)
 
