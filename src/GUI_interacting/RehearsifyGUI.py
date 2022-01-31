@@ -228,17 +228,17 @@ class RehearsifyGUI:
             filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"),
              ("Text files", "*.txt")] )
         if filepath: 
+             
              # sort score_df by answer, ignoring the regex obtained from the user
-
-            ignore_str = None 
-            while ignore_str is None:
-                try:
-                    ignore_str = askstring( 
-                        "Translation ordering for saving", "Strings to ignore in sorting translations (separated by '|'):" )
-                    validate_ignore_str( ignore_str )
-                except ValueError as e: 
-                    print(f"error {e!r}")
-            _score_df = sort_df( self.score_df, ignore_str )
+            try:
+                ignore_str = askstring( 
+                    "Translation ordering for saving", 
+                    "Strings to ignore in sorting translations by answer (separated by '|'):" )
+                validate_ignore_str( ignore_str )
+            except ValueError as e: 
+                print(f"error {e!r}")
+            if ignore_str:
+                _score_df = sort_df( self.score_df, ignore_str )
             
             if filepath.endswith(".txt"):
                 save_as_dictionary_txtfile( filepath, _score_df )

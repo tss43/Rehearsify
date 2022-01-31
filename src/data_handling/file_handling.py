@@ -86,5 +86,8 @@ def validate_translation_dictionary(score_df: pd.DataFrame):
 def validate_ignore_str(ignore_str: str):
     """Validate an ignore_str string given by the user for proper regex purposes."""
 
+    if not ignore_str:
+        return
+
     if '\\' in ignore_str:
         raise ValueError("Ignore string cannot contain '\\'.")
