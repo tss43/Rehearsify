@@ -14,7 +14,7 @@ def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
 
     with open(filepath, 'r') as f:
         translation_list = f.read().splitlines()       
-    translation_list = [ tuple( transl.split(' = ')[::-1] ) for transl in translation_list if transl.strip() ]
+    translation_list = [ tuple( transl.split(' = ')[::-1] ) for transl in translation_list ]
     
     # check that every translation contained exactly one '=', i.e. has both a to and from side
     incomplete_translations = [split_transl for split_transl in translation_list if len(split_transl)!=2 ]
