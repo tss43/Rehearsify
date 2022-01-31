@@ -325,8 +325,6 @@ class RehearsifyGUI:
         """Open new window displaying some general statistics about the translation dictionary."""
         
         stats_dict = compute_statistics(self.score_df)
-        
-
         msg = '\n'.join([ ': '.join( [key, str(val)] ) for key, val in stats_dict.items() ] )
         showinfo( title="Translation dictionary statistics", message=msg )
 
