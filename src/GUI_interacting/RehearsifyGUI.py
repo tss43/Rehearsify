@@ -12,7 +12,7 @@ import pandas as pd
 
 from src.data_handling.file_handling import (
     read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, 
-    validate_translation_dictionary, validate_ignore_str )
+    validate_score_df, validate_ignore_str )
 from src.translation_handling.sample_selecting import select_randomly_weighted_sample
 from src.translation_handling.answer_handling import check_answer
 from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
@@ -160,21 +160,21 @@ class RehearsifyGUI:
             self.log = ttk.Treeview( self.window, columns=DISPLAY_COLUMNS )
             self.initialise_log()
             self.log.grid(row=1,column=1, sticky='NSEW', padx=5, pady=1 )
-
-        if filepath.endswith(".txt"):
-            self.score_df = read_dictionary_txtfile( filepath )
-        elif filepath.endswith("csv"):
-            self.score_df = pd.read_csv( filepath )
-        elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
-            self.score_df = pd.read_excel( filepath )
-        elif filepath.endswith(".pkl"):
-            self.score_df = pd.read_pickle( filepath )
-        else:
-            raise ValueError("This shouldn't happen.")
-        
+       
         try:
+            if filepath.endswith(".txt"):
+                self.score_df = read_dictionary_txtfile( filepath )
+            elif filepath.endswith("csv"):
+                self.score_df = pd.read_csv( filepath )
+            elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
+                self.score_df = pd.read_excel( filepath )
+            elif filepath.endswith(".pkl"):
+                self.score_df = pd.read_pickle( filepath )
+            else:
+                raise ValueError("This shouldn't happen.")    
+
             # validate opened score_df
-            validate_translation_dictionary(self.score_df)
+            validate_score_df(self.score_df)
         except (KeyError, TypeError, ValueError) as e: 
             print(f"error {e!r}")
             return
@@ -214,9 +214,15 @@ class RehearsifyGUI:
     def update_file( self ):
         """Update the file by adding new words from a .txt and removing words that are not in this .txt."""
 
-        filepath = askopenfilename( filetypes=[("Text files", "*.txt")] )
-        if filepath:
-            _temp_df = read_dictionary_txtfile( filepath )
+        
+        if ( filepath := askopenfilename( filetypes=[("Text files", "*.txt")] ) ):
+            try:
+                _temp_df = read_dictionary_txtfile( filepath )
+                # validate opened score_df
+                validate_score_df(self.score_df)
+            except (KeyError, TypeError, ValueError) as e: 
+                print(f"error {e!r}")
+                return
             self.score_df = update_with_df( self.score_df, _temp_df )  
 
 
@@ -224,16 +230,15 @@ class RehearsifyGUI:
         """Save the current file as a new file."""
 
         # ask user for filepath
-        filepath = asksaveasfilename( 
+        if ( filepath := asksaveasfilename( 
             defaultextension="pkl", 
             filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"),
-             ("Text files", "*.txt")] )
-        if filepath: 
+             ("Text files", "*.txt")] ) ): 
              
              # sort score_df by answer, ignoring the regex obtained from the user
             while (ignore_str := askstring(
-                "Translation ordering for saving", 
-                "Strings to ignore in sorting translations by answer (separated by '|'):" ) ) is None:
+                title="Translation ordering for saving", 
+                prompt="Strings to ignore in sorting translations by answer (separated by '|'):" ) ) is None:
                 try:
                     validate_ignore_str( ignore_str )
                 except ValueError as e: 
@@ -292,9 +297,8 @@ class RehearsifyGUI:
 
     def lookup_question( self ):
         """Open new window with prompt for question for which the corresponding sample is then looked up."""
-
-        question = askstring( title="Question lookup", prompt="Question for which to find the sample:" )
-        if question: 
+      
+        if ( question := askstring( title="Question lookup", prompt="Question for which to find the sample:" ) ): 
             try:
                 _sample = find_sample_from_question( self.score_df, question )        
                 
@@ -309,8 +313,7 @@ class RehearsifyGUI:
     def lookup_answer( self ):
         """Open new window with prompt for answer for which the corresponding sample is then looked up."""
 
-        answer = askstring( title="Answer lookup", prompt="Answer for which to find the sample:" )
-        if answer: 
+        if ( answer := askstring( title="Answer lookup", prompt="Answer for which to find the sample:" ) ):
             try:
                 _sample = find_sample_from_answer( self.score_df, answer )
 

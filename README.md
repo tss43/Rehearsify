@@ -41,7 +41,6 @@ python3 Statistics translation_dictionary_fpath
 - [x] write tests
 - [ ] write README.md
 - [ ] Make Github Project public
-- [ ] Add ML sample selector
 - [ ] Add delight to the experience when all tasks are complete :tada:
 
 <!-- comments -->
