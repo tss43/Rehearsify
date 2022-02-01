@@ -161,26 +161,27 @@ class RehearsifyGUI:
             self.initialise_log()
             self.log.grid(row=1,column=1, sticky='NSEW', padx=5, pady=1 )
 
+        if filepath.endswith(".txt"):
+            self.score_df = read_dictionary_txtfile( filepath )
+        elif filepath.endswith("csv"):
+            self.score_df = pd.read_csv( filepath )
+        elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
+            self.score_df = pd.read_excel( filepath )
+        elif filepath.endswith(".pkl"):
+            self.score_df = pd.read_pickle( filepath )
+        else:
+            raise ValueError("This shouldn't happen.")
+        
         try:
-            if filepath.endswith(".txt"):
-                self.score_df = read_dictionary_txtfile( filepath )
-            elif filepath.endswith("csv"):
-                self.score_df = pd.read_csv( filepath )
-            elif filepath.endswith(".xls") | filepath.endswith(".xlsx"):
-                self.score_df = pd.read_excel( filepath )
-            elif filepath.endswith(".pkl"):
-                self.score_df = pd.read_pickle( filepath )
-
-            # keep only requisite columns
-            self.score_df = self.score_df[COLUMNS]
-
             # validate opened score_df
             validate_translation_dictionary(self.score_df)
-
         except (KeyError, TypeError, ValueError) as e: 
             print(f"error {e!r}")
             return
-      
+        
+        # keep only requisite columns
+        self.score_df = self.score_df[COLUMNS]
+
         # update prompt with first selected question
         self.sample = select_randomly_weighted_sample( self.score_df )
         self.question.set(self.sample.question)
@@ -230,9 +231,9 @@ class RehearsifyGUI:
         if filepath: 
              
              # sort score_df by answer, ignoring the regex obtained from the user
-            while (ignore_str := askstring( 
-                    "Translation ordering for saving", 
-                    "Strings to ignore in sorting translations by answer (separated by '|'):" ) ) is None:
+            while (ignore_str := askstring(
+                "Translation ordering for saving", 
+                "Strings to ignore in sorting translations by answer (separated by '|'):" ) ) is None:
                 try:
                     validate_ignore_str( ignore_str )
                 except ValueError as e: 
