@@ -230,15 +230,15 @@ class RehearsifyGUI:
         if filepath: 
              
              # sort score_df by answer, ignoring the regex obtained from the user
-            try:
-                ignore_str = askstring( 
+            while (ignore_str := askstring( 
                     "Translation ordering for saving", 
-                    "Strings to ignore in sorting translations by answer (separated by '|'):" )
-                validate_ignore_str( ignore_str )
-            except ValueError as e: 
-                print(f"error {e!r}")
-            if ignore_str:
-                _score_df = sort_df( self.score_df, ignore_str )
+                    "Strings to ignore in sorting translations by answer (separated by '|'):" ) ) is None:
+                try:
+                    validate_ignore_str( ignore_str )
+                except ValueError as e: 
+                    print(f"error {e!r}")
+                    ignore_str = None
+            _score_df = sort_df( self.score_df, ignore_str )
             
             if filepath.endswith(".txt"):
                 save_as_dictionary_txtfile( filepath, _score_df )
