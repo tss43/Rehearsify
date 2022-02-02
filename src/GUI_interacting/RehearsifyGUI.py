@@ -217,13 +217,13 @@ class RehearsifyGUI:
         
         if ( filepath := askopenfilename( filetypes=[("Text files", "*.txt")] ) ):
             try:
-                _temp_df = read_dictionary_txtfile( filepath )
-                # validate opened score_df
-                validate_score_df(self.score_df)
+                _update_df = read_dictionary_txtfile( filepath )
+                # validate opened _update_df
+                validate_score_df(_update_df)
             except (KeyError, TypeError, ValueError) as e: 
                 print(f"error {e!r}")
                 return
-            self.score_df = update_with_df( self.score_df, _temp_df )  
+            self.score_df = update_with_df( self.score_df, _update_df )  
 
 
     def save_file( self ):
