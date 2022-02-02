@@ -22,16 +22,16 @@ def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
     return score_df
 
 
-def update_with_df(score_df: pd.DataFrame, _temp_df: pd.DataFrame) -> pd.DataFrame:
-    """ Update the score df with the words from temp df. """
+def update_with_df(score_df: pd.DataFrame, _update_df: pd.DataFrame) -> pd.DataFrame:
+    """ Update the score df with the words from update df. """
 
     # keeping only words from score_df that are in _temp_df
-    mask_intersection = np.all( np.isin( score_df[COLUMNS[:2]].to_numpy(), _temp_df[COLUMNS[:2]].to_numpy() ), axis=1 )
+    mask_intersection = np.all( np.isin( score_df[COLUMNS[:2]].to_numpy(), _update_df[COLUMNS[:2]].to_numpy() ), axis=1 )
     _intersection_df = score_df[mask_intersection]
     
-    # adding words only in ._temp_df to score_df
-    mask_ldiff = np.all( np.isin( _temp_df[COLUMNS[:2]].to_numpy(), score_df[COLUMNS[:2]].to_numpy(), invert=True ), axis=1 )
-    _ldiff_df = _temp_df[mask_ldiff]
+    # adding words only in _update_df to score_df
+    mask_ldiff = np.all( np.isin( _update_df[COLUMNS[:2]].to_numpy(), score_df[COLUMNS[:2]].to_numpy(), invert=True ), axis=1 )
+    _ldiff_df = _update_df[mask_ldiff]
     
     _score_df = _intersection_df.append( _ldiff_df )
 
