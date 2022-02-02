@@ -3,7 +3,6 @@
 
 import sys
 
-
 import pandas as pd
 
 from GUI_interacting.RehearsifyGUI import open_Rehearsify_GUI
