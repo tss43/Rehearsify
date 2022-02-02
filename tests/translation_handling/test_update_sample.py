@@ -9,7 +9,7 @@ import numpy as np
 
 from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
 
-from constants import COLUMNS
+from src.constants import COLUMNS
 
 class TestUpdateDataFrame(unittest.TestCase):
     """ Tests of updating the score dataframe. """

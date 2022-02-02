@@ -9,7 +9,7 @@ import numpy as np
 
 from src.data_handling.file_handling import read_dictionary_txtfile, save_as_dictionary_txtfile, update_with_df
 
-from constants import COLUMNS
+from src.constants import COLUMNS
 
 class TestFileHandling(unittest.TestCase):
     """ Tests of handling files. """

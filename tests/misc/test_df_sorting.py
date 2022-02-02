@@ -8,7 +8,7 @@ import itertools
 
 from src.misc.df_sorting import sort_df
 
-from constants import COLUMNS
+from src.constants import COLUMNS
 
 class TestDfSorting(unittest.TestCase):
     """ Tests of the sorting of the score df. """

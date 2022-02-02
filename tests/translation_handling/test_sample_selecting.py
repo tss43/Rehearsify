@@ -8,7 +8,7 @@ import numpy as np
 
 from src.translation_handling.sample_selecting import select_randomly_weighted_sample
 
-from constants import COLUMNS
+from src.constants import COLUMNS
 
 class TestSampleSelecting(unittest.TestCase):
     """ Tests of sample selecting. """

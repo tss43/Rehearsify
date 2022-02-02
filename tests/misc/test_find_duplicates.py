@@ -6,7 +6,7 @@ import pandas as pd
 
 from src.misc.find_duplicates import find_duplicates
 
-from constants import COLUMNS
+from src.constants import COLUMNS
 
 class TestFindDuplicates(unittest.TestCase):
     """ Tests of finding duplicates in the score dataframe. """

@@ -7,7 +7,7 @@ import pandas as pd
 
 from src.misc.find_sample import find_sample_from_answer, find_sample_from_question
 
-from constants import COLUMNS
+from src.constants import COLUMNS
 
 class TestFindSample(unittest.TestCase):
     """ Tests of finding samples. """

@@ -8,7 +8,7 @@ import numpy as np
 
 from src.misc.compute_statistics import compute_statistics
 
-from constants import COLUMNS, STATS_COLUMNS
+from src.constants import COLUMNS, STATS_COLUMNS
 
 class TestComputeStatistics(unittest.TestCase):
     """ Tests on the dict used to insert new entries into RehearsifyGUI objects. """
