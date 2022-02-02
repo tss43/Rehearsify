@@ -2,9 +2,11 @@
 
 ## Overview
 
-Rehearsify is an app for practising foreign language words. To get started, these can be loaded in from a simple .txt file. This allows the user great flexibility in the question they want to practise and the corresponding answers that will be counted as correct. Access is provided through a simple, intuitive GUI, from which progress scores might be saved. Further offered functionality includes the option to look up a question for the appropriate answer or vice versa, and to inspect some statistics of the the loaded dictionary of translations.
+Rehearsify is an app for practising foreign language words. To get started, these can be loaded in from a simple .txt file. This allows the user great flexibility in the questions they want to practise and the corresponding answers that will be counted as correct. Access is provided through a simple, intuitive GUI, from which progress scores might be saved. Further offered functionality includes the option to look up the appropriate answer for a question or vice versa, and to inspect some overall statistics of the the loaded dictionary of translations.
 
 ## Usage
+
+The best point of entry into the GUI is
 
 - Open GUI by calling `python3 main.py` from the command line
 - Open file
