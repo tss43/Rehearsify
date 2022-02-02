@@ -374,6 +374,7 @@ class RehearsifyGUI:
                 self.sample = _sample 
 
 
+#### turn into static method?
 def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correct: bool|None ):
     """Combine some metrics into a dict whose values can easily be inserted into the log."""
     
@@ -387,7 +388,12 @@ def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correc
     return update_dict      
 
 
-
+def open_Rehearsify_GUI():
+    """ Open the main Rehearsify GUI window. """
+    
+    root = tk.Tk()
+    app = RehearsifyGUI(window=root) 
+    root.mainloop()
 
     
 

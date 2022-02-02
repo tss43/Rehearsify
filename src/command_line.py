@@ -3,13 +3,22 @@
 
 import sys
 
+
 import pandas as pd
 
+from GUI_interacting.RehearsifyGUI import open_Rehearsify_GUI
 from misc.compute_statistics import compute_statistics
 from misc.find_duplicates import find_duplicates
 from data_handling.file_handling import read_dictionary_txtfile
 
 from constants import COLUMNS 
+
+def script_rehearsify():
+    """ Open the main Rehearsify GUI window. """
+
+    if __name__ == "command_line":       
+        open_Rehearsify_GUI() 
+
 
 def script_compute_statistics():
     """ Give some statistics of a dictionary.
