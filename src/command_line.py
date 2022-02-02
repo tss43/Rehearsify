@@ -9,6 +9,7 @@ import pandas as pd
 from GUI_interacting.RehearsifyGUI import open_Rehearsify_GUI
 from misc.compute_statistics import compute_statistics
 from misc.find_duplicates import find_duplicates
+
 from data_handling.file_handling import read_dictionary_txtfile
 
 from constants import COLUMNS 
