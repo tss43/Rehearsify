@@ -4,7 +4,6 @@ import string
 import re
 import unidecode 
 
-
 def check_answer(user_answer: str, correct_answer: str) -> bool:
     """ check if the answer given by the user is correct """
 
