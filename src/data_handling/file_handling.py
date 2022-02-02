@@ -4,9 +4,9 @@
 import numpy as np
 import pandas as pd
 
-from src.misc.find_duplicates import find_duplicates
+from misc.find_duplicates import find_duplicates
 
-from src.constants import COLUMNS, COLUMN_DTYPES
+from constants import COLUMNS, COLUMN_DTYPES
 
 
 def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
