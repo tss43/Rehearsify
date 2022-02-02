@@ -9,9 +9,8 @@ setuptools.setup(
     description="Programme to rehearse words",
     entry_points = {
         'console_scripts':[
-            'Rehearsify=command_line:script_rehearsify',
-            'FindDuplicates=command_line:script_find_duplicates',
-            'Statistics=command_line:script_compute_statistics' ]},
-    packages=setuptools.find_packages('src'),
-    package_dir={'':'src'}
+            'Rehearsify=scripts.command_line:script_rehearsify',
+            'FindDuplicates=scripts.command_line:script_find_duplicates',
+            'Statistics=scripts.command_line:script_compute_statistics' ]},
+    packages=setuptools.find_packages('')
 )

@@ -1,31 +1,31 @@
 # command_line.py
-""" provides supporting functionality callable from command line, beyond the main function """
 
 import sys
 
 import pandas as pd
 
-from GUI_interacting.RehearsifyGUI import open_Rehearsify_GUI
-from misc.compute_statistics import compute_statistics
-from misc.find_duplicates import find_duplicates
+from src.GUI_interacting.RehearsifyGUI import open_Rehearsify_GUI
+from src.misc.compute_statistics import compute_statistics
+from src.misc.find_duplicates import find_duplicates
 
-from data_handling.file_handling import read_dictionary_txtfile
+from src.data_handling.file_handling import read_dictionary_txtfile
 
-from constants import COLUMNS 
+from src.constants import COLUMNS 
+
 
 def script_rehearsify():
-    """ Open the main Rehearsify GUI window. """
+    """ To use the command line to open the main Rehearsify GUI window. """
 
-    if __name__ == "command_line":       
+    if __name__ == "scripts.command_line":       
         open_Rehearsify_GUI() 
 
 
 def script_compute_statistics():
-    """ Give some statistics of a dictionary.
+    """ To use the command line to give some statistics of a dictionary.
     INPUTS: 
             dictionary_fpath: str """
 
-    if __name__ == "command_line":       
+    if __name__ == "scripts.command_line":       
         args=sys.argv[1:]
         argc=len(args) 
 
@@ -56,11 +56,11 @@ def script_compute_statistics():
 
 
 def script_find_duplicates():
-    """ Find duplicate questions within a given dictionary.
+    """ To use the command line to find duplicate questions within a given dictionary.
     INPUTS: 
             dictionary_fpath: str """
 
-    if __name__ == "command_line":       
+    if __name__ == "scripts.command_line":       
         args=sys.argv[1:]
         argc=len(args) 
 
@@ -83,3 +83,4 @@ def script_find_duplicates():
                 print(f"Duplicate question entries are:\n {duplicates_set}")
             else:
                 print("No duplicate questions found!")
+
