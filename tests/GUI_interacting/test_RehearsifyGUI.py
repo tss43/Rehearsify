@@ -15,7 +15,7 @@ from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 from src.constants import COLUMNS, DISPLAY_COLUMNS
 
 class TestRehearsifyGUI(unittest.TestCase):
-    """ Tests on RehearsifyGUI and its methods. """
+    """ Tests on RehearsifyGUI methods. """
 
     def assertHasAttr(self, obj, intendedAttr):
         """ Custom assert method to establish if instance has attribute. """
