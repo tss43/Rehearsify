@@ -28,6 +28,7 @@ python3 Statistics translation_dictionary_fpath
 ```
 
 ![Dictionary statistics screen](./docs/Dictionary_statistics_screen.png)
+![Example dictionary txtfile screen](./docs/Example_dictionary_txtfile.png)
 ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png)
 ![Initial screen](./docs/Initial_screen.png)
 ![Lookup screen](./docs/Lookup_screen.png)
