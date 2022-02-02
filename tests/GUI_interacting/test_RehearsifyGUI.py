@@ -9,7 +9,7 @@ import itertools
 import tkinter as tk
 
 from src.translation_handling.answer_handling import check_answer
-from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI, dict_to_insert_in_log
+from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 
 
 from src.constants import COLUMNS, DISPLAY_COLUMNS
@@ -81,7 +81,7 @@ class TestLogInsertionDict(unittest.TestCase):
         for user_answer, sample in itertools.product(user_answer_list, sample_list):
             
             answer_is_correct = check_answer( user_answer, sample.answer ) 
-            test_dict = dict_to_insert_in_log( sample, user_answer, answer_is_correct )
+            test_dict = RehearsifyGUI.dict_to_insert_in_log( sample, user_answer, answer_is_correct )
     
             with self.subTest(f"list( {test_dict}.keys() ) -> {expected_keys}"): 
 

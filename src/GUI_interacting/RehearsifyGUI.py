@@ -286,7 +286,7 @@ class RehearsifyGUI:
         self.score_df[ self.score_df['question']==self.sample.question ] = self.sample
 
         # update log treeview widget
-        update_dict = dict_to_insert_in_log(self.sample, self.user_answer, answer_is_correct) 
+        update_dict = self.dict_to_insert_in_log(self.sample, self.user_answer, answer_is_correct) 
         self.log.insert('', index=0, iid=self.practise_count, values=list(update_dict.values()) )
 
 
@@ -303,7 +303,7 @@ class RehearsifyGUI:
                 _sample = find_sample_from_question( self.score_df, question )        
                 
                 # update log treeview widget
-                update_dict = dict_to_insert_in_log(_sample, "", None)  
+                update_dict = self.dict_to_insert_in_log(_sample, "", None)  
                 self.log.insert('', index=0, values=list(update_dict.values()) )
 
             except ValueError:
@@ -318,7 +318,7 @@ class RehearsifyGUI:
                 _sample = find_sample_from_answer( self.score_df, answer )
 
                 # update log treeview widget
-                update_dict = update_dict = dict_to_insert_in_log(_sample, "", None)  
+                update_dict = update_dict = self.dict_to_insert_in_log(_sample, "", None)  
                 self.log.insert('', index=0, values=list(update_dict.values()) )
 
             except ValueError:
@@ -365,27 +365,28 @@ class RehearsifyGUI:
                 + str(self.prev_practise_count+self.practise_count) )
 
              # update log treeview widget
-            update_dict = dict_to_insert_in_log( _sample, previous_user_answer, True )
+            update_dict = self.dict_to_insert_in_log( _sample, previous_user_answer, True )
             self.log.delete( str(self.practise_count) )
             self.log.insert( '', index=0, iid=str(self.practise_count), values=list(update_dict.values()) )
 
             # update the sample belonging to the current question if it was immediately repeated
             if previous_question==self.sample.question:
                 self.sample = _sample 
-
-
-#### turn into static method?
-def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correct: bool|None ):
-    """Combine some metrics into a dict whose values can easily be inserted into the log."""
     
-    update_dict = {
-        'X/O':              f"{'---' if answer_is_correct is None else 'ooo' if answer_is_correct else 'xxx'}",
-        'Question':         f"{sample.question}",
-        'Correct answer':   f"{sample.answer}",
-        'User answer':      f"{user_answer}",
-        'Wrong/total':      f"{sample.wrong}/{sample.total}" }
+    @staticmethod
+    def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correct: bool|None ):
+        """Combine some metrics into a dict whose values can easily be inserted into the log."""
+        
+        update_dict = {
+            'X/O':              f"{'---' if answer_is_correct is None else 'ooo' if answer_is_correct else 'xxx'}",
+            'Question':         f"{sample.question}",
+            'Correct answer':   f"{sample.answer}",
+            'User answer':      f"{user_answer}",
+            'Wrong/total':      f"{sample.wrong}/{sample.total}" }
+        
+        return update_dict      
     
-    return update_dict      
+
 
 
 def open_Rehearsify_GUI():
