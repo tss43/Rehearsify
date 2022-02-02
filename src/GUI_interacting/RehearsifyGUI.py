@@ -10,18 +10,18 @@ from tkinter.messagebox import showinfo
 
 import pandas as pd
 
-from data_handling.file_handling import (
+from src.data_handling.file_handling import (
     read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, 
     validate_score_df, validate_ignore_str )
-from translation_handling.sample_selecting import select_randomly_weighted_sample
-from translation_handling.answer_handling import check_answer
-from translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
+from src.translation_handling.sample_selecting import select_randomly_weighted_sample
+from src.translation_handling.answer_handling import check_answer
+from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
 
-from misc.df_sorting import sort_df
-from misc.find_sample import find_sample_from_question, find_sample_from_answer
-from misc.compute_statistics import compute_statistics
+from src.misc.df_sorting import sort_df
+from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
+from src.misc.compute_statistics import compute_statistics
 
-from constants import COLUMNS, DISPLAY_COLUMNS
+from src.constants import COLUMNS, DISPLAY_COLUMNS
 
 
 class RehearsifyGUI:
