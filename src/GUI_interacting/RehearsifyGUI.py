@@ -388,7 +388,6 @@ class RehearsifyGUI:
     
 
 
-
 def open_Rehearsify_GUI():
     """ Open the main Rehearsify GUI window. """
     
