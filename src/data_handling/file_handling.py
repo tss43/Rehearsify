@@ -58,7 +58,7 @@ def validate_score_df(score_df: pd.DataFrame):
         raise  KeyError(f"Attempted to open a corrupted DataFrame: does not contain column {example} from required list {COLUMNS}.")
 
     # check column types
-    if any( score_df.dtypes != COLUMN_DTYPES ):
+    if any( score_df[COLUMNS].dtypes != COLUMN_DTYPES ):
         raise TypeError("DataFrame has inappropriate column types.")
 
     # check if df contains empty question and answer columns
