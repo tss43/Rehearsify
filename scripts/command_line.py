@@ -8,9 +8,7 @@ from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 from src.misc.compute_statistics import compute_statistics
 from src.misc.find_duplicates import find_duplicates
 
-from src.data_handling.file_handling import read_dictionary_txtfile
-
-from src.constants import COLUMNS 
+from src.data_handling.file_handling import read_dictionary_txtfile, validate_score_df
 
 
 def script_rehearsify():
@@ -45,9 +43,10 @@ def script_compute_statistics():
                 raise ValueError("Usage: print_statistics dictionary.txt/xls(x)/pkl")
             
             try:
-                score_df = score_df[COLUMNS]
-            except KeyError("Attempted to open a corrupted DataFrame."):
-                print(f"Table should contain columns {COLUMNS}.")
+                validate_score_df(score_df)
+            except (KeyError, TypeError, ValueError) as e: 
+                print(f"error {e!r}")
+                return
             
             stats_dict = compute_statistics(score_df)
 

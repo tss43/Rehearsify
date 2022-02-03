@@ -27,6 +27,14 @@ from src.constants import COLUMNS, DISPLAY_COLUMNS
 class RehearsifyGUI:
     """ Class defining the RehearsifyGUI. """
 
+    @classmethod 
+    def open_GUI(cls):
+        """ Open the main Rehearsify GUI window. """
+    
+        root = tk.Tk()
+        app = cls(window=root) 
+        root.mainloop() 
+
     def __init__(self, window):
         """ Initialise object with the following attributes. """
 
@@ -39,15 +47,6 @@ class RehearsifyGUI:
 
         # initialise the GUI
         self.initialise_GUI()
-   
-    @classmethod 
-    def open_GUI(cls):
-        """ Open the main Rehearsify GUI window. """
-    
-        root = tk.Tk()
-        app = cls(window=root) 
-        root.mainloop() 
-
     
     #instance methods
     def initialise_var_attributes( self ):
@@ -381,7 +380,7 @@ class RehearsifyGUI:
             if previous_question==self.sample.question:
                 self.sample = _sample 
     
-    
+
     @staticmethod
     def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correct: bool|None ):
         """Combine some metrics into a dict whose values can easily be inserted into the log."""
