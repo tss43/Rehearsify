@@ -6,9 +6,10 @@ Rehearsify is an app for practising foreign language words. To get started, thes
 
 ## Usage
 
-The best way to access the GUI is to call it from the command line by invoking `python main.py`, or its simpler alias `Rehearsify`. This will open the initial screen ![Initial screen](./docs/Initial_screen.png). Clicking the 'Open file' button spawns a file explorer with which a file can be selected for opening. Currently supported file formats are:
+The best way to access the GUI is to call it from the command line by invoking `python main.py`, or its simpler alias `Rehearsify`. This will open the initial screen: ![Initial screen](./docs/Initial_screen.png) Clicking the 'Open file' button spawns a file explorer with which a file can be selected for opening. Currently supported file formats are:
 
-- .txt: for supplying a _new_ translation dictionary to practise. Every line, representing a single translation, should be of form 'question1'; 'question2'; ... = 'answer1', 'answer2', answer', ...
+- .txt: for supplying a _new_ translation dictionary to practise.
+Every line, representing a single translation, should be of the form 'question1'; 'question2'; ... = 'answer1', 'answer2', answer', ...
 - .csv, .xls(x) and .pkl: for continuing with statistics of last practise session
 
 - opened file screen
