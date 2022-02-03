@@ -39,8 +39,16 @@ class RehearsifyGUI:
 
         # initialise the GUI
         self.initialise_GUI()
- 
+   
+    @classmethod 
+    def open_GUI(cls):
+        """ Open the main Rehearsify GUI window. """
+    
+        root = tk.Tk()
+        app = cls(window=root) 
+        root.mainloop() 
 
+    
     #instance methods
     def initialise_var_attributes( self ):
         """Initialise the instance attributes."""
@@ -373,6 +381,7 @@ class RehearsifyGUI:
             if previous_question==self.sample.question:
                 self.sample = _sample 
     
+    
     @staticmethod
     def dict_to_insert_in_log( sample: pd.Series, user_answer: str, answer_is_correct: bool|None ):
         """Combine some metrics into a dict whose values can easily be inserted into the log."""
@@ -384,16 +393,10 @@ class RehearsifyGUI:
             'User answer':      f"{user_answer}",
             'Wrong/total':      f"{sample.wrong}/{sample.total}" }
         
-        return update_dict      
+        return update_dict     
     
 
 
-def open_Rehearsify_GUI():
-    """ Open the main Rehearsify GUI window. """
-    
-    root = tk.Tk()
-    app = RehearsifyGUI(window=root) 
-    root.mainloop()
 
     
 

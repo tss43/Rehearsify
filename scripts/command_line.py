@@ -4,7 +4,7 @@ import sys
 
 import pandas as pd
 
-from src.GUI_interacting.RehearsifyGUI import open_Rehearsify_GUI
+from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 from src.misc.compute_statistics import compute_statistics
 from src.misc.find_duplicates import find_duplicates
 
@@ -17,7 +17,7 @@ def script_rehearsify():
     """ To use the command line to open the main Rehearsify GUI window. """
 
     if __name__ == "scripts.command_line":       
-        open_Rehearsify_GUI() 
+        RehearsifyGUI.open_GUI() 
 
 
 def script_compute_statistics():

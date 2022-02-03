@@ -3,8 +3,8 @@
 
 
 # to enable executing module as script 
-from src.GUI_interacting.RehearsifyGUI import open_Rehearsify_GUI
+from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 
 
 if __name__ == "__main__":
-    open_Rehearsify_GUI()
+    RehearsifyGUI.open_GUI()
