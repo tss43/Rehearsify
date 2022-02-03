@@ -11,18 +11,20 @@ The best way to access the GUI is to call it from the command line by invoking `
 - .txt: for supplying a _new_ translation dictionary to practise. Every line, representing a single translation, should be of the form 'question1'; 'question2'; ... = 'answer1', 'answer2', answer', ...
 - .csv, .xls(x) and .pkl: for continuing with statistics of last practise session
 
-After opening a translation dictionary file, the GUI window will look like: ![Opened file screen](./docs/Opened_file_screen.png) Here, the user will be prompted with a randomly selected question (weighted by the percentage of wrong attempts) to rehearse. Upon typing an answer in the user response field and pushing the `Go` button, or simply pressing `Enter`, it will be checked against the correct answer on record in the dictionary and the statistics are updated correspondingly. The correct answer, and if the supplied user answer coincided, is shown to the user in the lower pane log: ![Answered questions screen](./docs/Answered_questions_screen.png) Note that practise statistics and the user answer become visible upon maximising the window: ![Answered questions screen (maximised)](./docs/Answered_questions_screen_maximised.png)  
+An example of a translation dictionary .txt looks like: ![Example dictionary txtfile screen](./docs/Example_dictionary_txtfile.png)
 
-- save as -> file formats
+After opening a translation dictionary file, the GUI window will look like: ![Opened file screen](./docs/Opened_file_screen.png) Here, the user will be prompted with a randomly selected question (weighted by the percentage of wrong attempts) to rehearse. Upon typing an answer in the user response field and pushing the `Go` button, or simply pressing `Enter`, it will be checked against the correct answer on record in the dictionary and the statistics are updated correspondingly. The outcome of the check and the the correct answer are shown to the user in the lower pane log: ![Answered questions screen](./docs/Answered_questions_screen.png) Note that practise statistics and the user answer become visible upon maximising the window: ![Answered questions screen (maximised)](./docs/Answered_questions_screen_maximised.png)  
+
+- save as ![Save file screen](./docs/Save_file_screen.png)
 
 - .txt: for saving as plain list of translations, without statistics
 - .csv, .xls(x) and .pkl: for saving dictionary as tabular data, including statistics of practise session
 
-- ordering string + screen shot
+- ordering string w. ignoring str ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png)
 - update with -> use more actual .txt to add new translations and remove those not .txt
 
-- lookup buttons + screen shot
-- dict statistics button + screen shot
+- lookup buttons ![Lookup screen](./docs/Lookup_screen.png)
+- dict statistics button ![Dictionary statistics screen](./docs/Dictionary_statistics_screen.png)
 
 Finally, some further command line functionality to query a translation dictionary is also provided:
 
@@ -30,13 +32,6 @@ Finally, some further command line functionality to query a translation dictiona
 FindDuplicates translation_dictionary_fpath
 Statistics translation_dictionary_fpath
 ```
-
-![Dictionary statistics screen](./docs/Dictionary_statistics_screen.png)
-![Example dictionary txtfile screen](./docs/Example_dictionary_txtfile.png)
-![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png)
-
-![Lookup screen](./docs/Lookup_screen.png)
-![Save file screen](./docs/Save_file_screen.png)
 
 ## TO-DO
 
