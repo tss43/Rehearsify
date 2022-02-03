@@ -27,7 +27,7 @@ from src.constants import COLUMNS, DISPLAY_COLUMNS
 class RehearsifyGUI:
     """ Class defining the RehearsifyGUI. """
 
-    def __init__(self, window):
+    def __init__( self, window=tk.Tk() ):
         """ Initialise object with the following attributes. """
 
         #instance attributes
