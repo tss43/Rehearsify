@@ -1,10 +1,13 @@
 # main.py
 """To treat directory as executable."""
 
+import tkinter as tk
 
-# to enable executing module as script 
 from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
 
-
+# to enable executing module as script 
 if __name__ == "__main__":
-    RehearsifyGUI.open_GUI()
+        
+    root = tk.Tk()
+    app = RehearsifyGUI(window=root) 
+    root.mainloop() 

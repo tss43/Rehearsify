@@ -2,6 +2,8 @@
 
 import sys
 
+import tkinter as tk
+
 import pandas as pd
 
 from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
@@ -15,7 +17,9 @@ def script_rehearsify():
     """ To use the command line to open the main Rehearsify GUI window. """
 
     if __name__ == "scripts.command_line":       
-        RehearsifyGUI.open_GUI() 
+        root = tk.Tk()
+        app = RehearsifyGUI(window=root) 
+        root.mainloop() 
 
 
 def script_compute_statistics():

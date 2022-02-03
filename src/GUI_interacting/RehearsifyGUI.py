@@ -27,14 +27,6 @@ from src.constants import COLUMNS, DISPLAY_COLUMNS
 class RehearsifyGUI:
     """ Class defining the RehearsifyGUI. """
 
-    @classmethod 
-    def open_GUI(cls):
-        """ Open the main Rehearsify GUI window. """
-    
-        root = tk.Tk()
-        app = cls(window=root) 
-        root.mainloop() 
-
     def __init__(self, window):
         """ Initialise object with the following attributes. """
 
