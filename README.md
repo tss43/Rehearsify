@@ -15,6 +15,8 @@ An example of a translation dictionary .txt looks like: ![Example dictionary txt
 
 After opening a translation dictionary file, the GUI window will look like: ![Opened file screen](./docs/Opened_file_screen.png) Here, the user will be prompted with a randomly selected question (weighted by the percentage of wrong attempts) to rehearse. Upon typing an answer in the user response field and pushing the `Go` button, or simply pressing `Enter`, it will be checked against the correct answer on record in the dictionary and the statistics are updated correspondingly. The outcome of the check and the the correct answer are shown to the user in the lower pane log: ![Answered questions screen](./docs/Answered_questions_screen.png) Note that practise statistics and the user answer become visible upon maximising the window: ![Answered questions screen (maximised)](./docs/Answered_questions_screen_maximised.png)  
 
+- mark previous as correct
+
 - save as ![Save file screen](./docs/Save_file_screen.png)
 
 - .txt: for saving as plain list of translations, without statistics
