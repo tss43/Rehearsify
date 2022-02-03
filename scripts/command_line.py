@@ -2,6 +2,8 @@
 
 import sys
 
+from tkinter import Tk
+
 import pandas as pd
 
 from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
@@ -16,8 +18,9 @@ def script_rehearsify():
 
     if __name__ == "scripts.command_line":       
         
-        app = RehearsifyGUI() 
-        app.window.mainloop() 
+        root = Tk()
+        app = RehearsifyGUI(window=root) 
+        app.window.mainloop()
 
 
 def script_compute_statistics():

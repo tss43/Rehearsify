@@ -27,7 +27,7 @@ from src.constants import COLUMNS, DISPLAY_COLUMNS
 class RehearsifyGUI:
     """ Class defining the RehearsifyGUI. """
 
-    def __init__( self, window=tk.Tk() ):
+    def __init__( self, window ):
         """ Initialise object with the following attributes. """
 
         #instance attributes
@@ -149,7 +149,7 @@ class RehearsifyGUI:
         if not filepath:
             return
 
-        # reinitialise attributes in case a file is opened on top of an old one. 
+        # reset attributes in case a file is opened on top of an old one. 
         if self.practise_count > 0:
             self.initialise_var_attributes()
             
