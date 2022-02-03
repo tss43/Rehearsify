@@ -51,6 +51,7 @@ class RehearsifyGUI:
         self.practise_wrong_count = 0
         self.prev_practise_count = 0  
         self.prev_practise_wrong_count = 0
+    
          
     def initialise_GUI( self ):
         """ Initialise the GUI. """
