@@ -37,7 +37,7 @@ After providing a file name, the user is prompted by a pop up screen asking for 
 - lookup buttons ![Lookup screen](./docs/Lookup_screen.png)
 - dict statistics button ![Dictionary statistics screen](./docs/Dictionary_statistics_screen.png)
 
-### Further cmdline functionality
+### Further command line functionality
 
 Some further command line functionality to query a translation dictionary is also provided:
 
