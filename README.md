@@ -51,7 +51,7 @@ This spawns a pop up with some overall statistics of the translation dictionary:
 Some further command line functionality to query a translation dictionary is also provided:
 
 ```bash
-FindDuplicates translation_dictionary_fpath
-Statistics translation_dictionary_fpath
+>> FindDuplicates translation_dictionary_fpath
+>> Statistics translation_dictionary_fpath
 ```
 <!-- comments -->
