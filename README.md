@@ -30,7 +30,7 @@ After providing a file name, the user is prompted by a pop up screen asking for 
 
 ### Updating dictionary
 
-There is also the option of using a modified `.txt` file as master template to update the translation dictionary that is loaded in with the `Update with ...` button. This adds any new translations added to the selected `.txt` and removes those not in it. 
+There is also the option of using a modified `.txt` file as master template to update the translation dictionary that is loaded in with the `Update with ...` button. This adds any new translations added to the selected `.txt` and removes those not in it.
 
 ### Further buttons
 
@@ -38,7 +38,7 @@ Some further buttons are also represented in the GUI window:
 
 - lookup buttons
 
-These add convenience functionality to quickly check up the sample in the dictionary corresponding to a given question or answer: 
+These add convenience functionality to quickly check up the sample in the dictionary corresponding to a given question or answer:
 ![Lookup screen](./docs/Lookup_screen.png)
 
 - dict statistics button
@@ -54,4 +54,5 @@ Some further command line functionality to query a translation dictionary is als
 >> FindDuplicates translation_dictionary_fpath
 >> Statistics translation_dictionary_fpath
 ```
+
 <!-- comments -->
