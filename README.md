@@ -17,18 +17,16 @@ An snapshot of a translation dictionary .txt looks like: ![Example dictionary tx
 
 ### Rehearsing translations
 
-After opening a translation dictionary file, the GUI window will look like: ![Opened file screen](./docs/Opened_file_screen.png) The user will be prompted with a randomly selected question (weighted by the percentage of wrong attempts) to rehearse in the upper pane. Upon typing an answer in the user response field and pushing the `Go` button, or simply pressing `Enter`, it will be checked against the correct answer on record in the dictionary and the statistics are updated correspondingly. The outcome of the check and the the correct answer are shown to the user in the lower pane log: ![Answered questions screen](./docs/Answered_questions_screen.png) Note that practise statistics and the user answer become visible upon maximising the window: ![Answered questions screen (maximised)](./docs/Answered_questions_screen_maximised.png)  
-
-- mark previous as correct
+After opening a translation dictionary file, the GUI window will look like: ![Opened file screen](./docs/Opened_file_screen.png) The user will be prompted with a randomly selected question (weighted by the percentage of wrong attempts) to rehearse in the upper pane. Upon typing an answer in the user response field and pushing the `Go` button, or simply pressing `Enter`, it will be checked against the correct answer on record in the dictionary and the statistics are updated correspondingly. The outcome of the check and the the correct answer are shown to the user in the lower pane log: ![Answered questions screen](./docs/Answered_questions_screen.png) Note that practise statistics and the user answer become visible upon maximising the window: ![Answered questions screen (maximised)](./docs/Answered_questions_screen_maximised.png) If the user feels the answer provided to the last question has erroneously been marked as uncorrect, the `mark previous correct` button changes check from wrong to right and adds the user answer to the list of correct answers in the translation dictionary.
 
 ### Saving progress
 
-- save as ![Save file screen](./docs/Save_file_screen.png)
+Once done with rehearsing, progress can be saved by clicking the `Save as ...` button. This opens a file explorer with which a file name can be provided to save under. Currently supported file formats are:
 
 - .txt: for saving as plain list of translations, without statistics
 - .csv, .xls(x) and .pkl: for saving dictionary as tabular data, including statistics of practise session
 
-- ordering string w. ignoring str ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png)
+After providing a file name, the user is prompted by a pop up screen asking for an optional string of patterns that will be ignored in sorting the translation dictionary: ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png) Note that multiple patterns can be provided by separating them by the vertical bar or operator `|`, and that the ignore string may also be empty. 
 
 ### Updating dictionary
 
