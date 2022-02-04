@@ -26,16 +26,25 @@ Once done with rehearsing, progress can be saved by clicking the `Save as ...` b
 - `.txt`: for saving as plain list of translations, without statistics
 - `.csv`, `.xls(x)` and `.pkl`: for saving dictionary as tabular data, including statistics of practise session
 
-After providing a file name, the user is prompted by a pop up screen asking for an optional string of patterns that will be ignored in sorting the translation dictionary: ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png) Note that multiple patterns can be provided by separating them by the vertical bar or operator `|`, and that the ignore string may also be empty. 
+After providing a file name, the user is prompted by a pop up screen asking for an optional string of patterns that will be ignored in sorting the translation dictionary: ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png) Note that multiple patterns can be provided by separating them by the vertical bar or operator `|`, and that the ignore string may also be empty.
 
 ### Updating dictionary
 
-- update with -> use more actual .txt to add new translations and remove those not .txt
+There is also the option of using a modified `.txt` file as master template to update the translation dictionary that is loaded in with the `Update with ...` button. This adds any new translations added to the selected `.txt` and removes those not in it. 
 
 ### Further buttons
 
-- lookup buttons ![Lookup screen](./docs/Lookup_screen.png)
-- dict statistics button ![Dictionary statistics screen](./docs/Dictionary_statistics_screen.png)
+Some further buttons are also represented in the GUI window:
+
+- lookup buttons
+
+These add convenience functionality to quickly check up the sample in the dictionary corresponding to a given question or answer: 
+![Lookup screen](./docs/Lookup_screen.png)
+
+- dict statistics button
+
+This spawns a pop up with some overall statistics of the translation dictionary:
+![Dictionary statistics screen](./docs/Dictionary_statistics_screen.png)
 
 ### Further command line functionality
 
@@ -45,12 +54,4 @@ Some further command line functionality to query a translation dictionary is als
 FindDuplicates translation_dictionary_fpath
 Statistics translation_dictionary_fpath
 ```
-
-## TO-DO
-
-- [x] write tests
-- [ ] write README.md
-- [ ] Make Github Project public
-- [ ] Add delight to the experience when all tasks are complete :tada:
-
 <!-- comments -->
