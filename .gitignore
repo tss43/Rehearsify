@@ -2,18 +2,16 @@
 /.venv
 /.vscode
 
-/support/.metadata
 /support/Translation_dictionaries
 
-__pycache__
-*/__pycache__
+*.DS_Store
+*__pycache__
 Rehearsify.egg-info/
-
-
-
-
-
 .python-version
-.DS_Store
-src/.DS_Store
+
+
+
+
+
+
 
