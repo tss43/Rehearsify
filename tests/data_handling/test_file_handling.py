@@ -18,8 +18,8 @@ class TestFileHandling(unittest.TestCase):
         """ Initialise attributes available for tests in class. """
         self.score_df = pd.DataFrame(
             data=[
-                ['question0', 'answer0', 100.*(1/1), 1, 1],
-                ['question1', 'answer1', 0, 0, 0] ], 
+                ['answer0', 'question0', 100.*(1/1), 1, 1],
+                ['answer1', 'question1', 0, 0, 0] ], 
             columns=COLUMNS ) 
         self.fpath_dictionary_txt = os.path.join( os.path.dirname(__file__), 'mock_dictionary.txt' )
         
@@ -59,14 +59,14 @@ class TestFileHandling(unittest.TestCase):
 
         add_df = pd.DataFrame( 
             data=[
-                ['question0', 'answer0', 0, 0, 0],
-                ['question_new', 'answer_new', 0, 0, 0] ], 
+                ['answer0', 'question0', 0, 0, 0],
+                ['answer_new', 'question_new', 0, 0, 0] ], 
             columns=COLUMNS ) 
 
         expected_updated_score_df = pd.DataFrame( 
             data=[
-                ['question0', 'answer0', 100.*(1/1), 1, 1],
-                ['question_new', 'answer_new', 0, 0, 0] ], 
+                ['answer0', 'question0', 100.*(1/1), 1, 1],
+                ['answer_new', 'question_new', 0, 0, 0] ], 
             columns=COLUMNS ) 
 
         updated_score_df = update_with_df( self.score_df, add_df )

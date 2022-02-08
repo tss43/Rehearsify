@@ -16,8 +16,8 @@ class TestFindSample(unittest.TestCase):
         """ Initialise attributes available for tests in class. """
         self.score_df = pd.DataFrame(
             data=[
-                ['question0', 'answer0', 100.*(1/1), 1, 1],
-                ['question1', 'answer1', 0, 0, 0] ], 
+                ['answer0', 'question0', 100.*(1/1), 1, 1],
+                ['answer1', 'question1', 0, 0, 0] ], 
             columns=COLUMNS ) 
 
     def tearDown(self):
@@ -29,7 +29,7 @@ class TestFindSample(unittest.TestCase):
         """ Testing finding a sample in the score df from a provided question. """
 
         found_sample = find_sample_from_question( self.score_df, question='question0' )
-        expected_found_sample = pd.Series( data=['question0', 'answer0', 100.*(1/1), 1, 1], index=COLUMNS, name=0 )
+        expected_found_sample = pd.Series( data=['answer0', 'question0', 100.*(1/1), 1, 1], index=COLUMNS, name=0 )
 
         assert_series_equal( found_sample, expected_found_sample )
 
@@ -38,6 +38,6 @@ class TestFindSample(unittest.TestCase):
         """ Testing finding a sample in the score df from a provided answer. """
 
         found_sample = find_sample_from_answer( self.score_df, answer='answer0' )
-        expected_found_sample = pd.Series( data=['question0', 'answer0', 100.*(1/1), 1, 1], index=COLUMNS, name=0 )
+        expected_found_sample = pd.Series( data=['answer0', 'question0', 100.*(1/1), 1, 1], index=COLUMNS, name=0 )
 
         assert_series_equal( found_sample, expected_found_sample )

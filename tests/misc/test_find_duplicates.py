@@ -17,13 +17,13 @@ class TestFindDuplicates(unittest.TestCase):
         score_df_list = [
             pd.DataFrame(
                 data=[ 
-                    ['question0', 'answer0', 0, 0, 0],
-                    ['question1', 'answer1', 0, 0, 0] ],
+                    ['answer0', 'question0', 0, 0, 0],
+                    ['answer1', 'question1', 0, 0, 0] ],
                 columns=COLUMNS ),
             pd.DataFrame(
                 data=[ 
-                    ['question', 'answer0', 0, 0, 0],
-                    ['question', 'answer1', 0, 0, 0] ],
+                    ['answer0', 'question', 0, 0, 0],
+                    ['answer1', 'question', 0, 0, 0] ],
                 columns=COLUMNS ) ]
 
         expected_duplicates_set_list = [set(), {'question'}]

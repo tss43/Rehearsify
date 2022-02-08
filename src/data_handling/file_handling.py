@@ -14,7 +14,7 @@ def read_dictionary_txtfile(filepath: str) -> pd.DataFrame:
 
     with open(filepath, 'r') as f:
         translation_list = f.read().splitlines()       
-    translation_list = [ tuple( transl.split(' = ')[::-1] ) for transl in translation_list if len( transl.strip() ) > 0 ]
+    translation_list = [ tuple( transl.split(' = ') ) for transl in translation_list if len( transl.strip() ) > 0 ]
 
     zero_dict = {COLUMNS[2]: np.NaN, COLUMNS[3]: 0, COLUMNS[4]: 0}
     score_df = pd.DataFrame( translation_list, columns=COLUMNS[:2] ).assign(**zero_dict)

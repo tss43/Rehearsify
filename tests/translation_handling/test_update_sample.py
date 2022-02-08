@@ -17,8 +17,8 @@ class TestUpdateDataFrame(unittest.TestCase):
     def setUp(self):
         """ Hook method for setting up the test fixture before exercising it. """
         self.sample_list = [
-            pd.Series( data=['test_question0', 'test_answer0', np.NaN, 0, 0], index = COLUMNS ),
-            pd.Series( data=['test_question1', 'test_answer1', 100.*(2/10), 2, 10], index = COLUMNS) ]
+            pd.Series( data=['test_answer0', 'test_question0', np.NaN, 0, 0], index = COLUMNS ),
+            pd.Series( data=['test_answer1', 'test_question1', 100.*(2/10), 2, 10], index = COLUMNS) ]
 
     def tearDown(self):
         """ Hook method for deconstructing the test fixture after testing it. """
@@ -31,8 +31,8 @@ class TestUpdateDataFrame(unittest.TestCase):
         further_correct_answer = 'further_correct_test_answer'
 
         expected_updated_sample_list = [
-            pd.Series( data=['test_question0', 'test_answer0' + '; ' + further_correct_answer, np.NaN, 0, 0], index = COLUMNS ),
-            pd.Series( data=['test_question1', 'test_answer1' + '; ' + further_correct_answer, 100.*(2/10), 2, 10], index = COLUMNS) ]
+            pd.Series( data=['test_answer0' + '; ' + further_correct_answer, 'test_question0', np.NaN, 0, 0], index = COLUMNS ),
+            pd.Series( data=['test_answer1' + '; ' + further_correct_answer, 'test_question1', 100.*(2/10), 2, 10], index = COLUMNS) ]
 
         for sample, expected_updated_sample in zip(self.sample_list, expected_updated_sample_list ):
            
@@ -45,8 +45,8 @@ class TestUpdateDataFrame(unittest.TestCase):
         answer_is_correct_list = [ True, False ]
 
         expected_updated_sample_list = [
-            pd.Series( data=['test_question0', 'test_answer0', 0, 0, 1], index = COLUMNS ),
-            pd.Series( data=['test_question1', 'test_answer1', 100.*(3/11), 3, 11], index = COLUMNS) ]
+            pd.Series( data=['test_answer0', 'test_question0', 0, 0, 1], index = COLUMNS ),
+            pd.Series( data=['test_answer1', 'test_question1', 100.*(3/11), 3, 11], index = COLUMNS) ]
 
         for sample, answer_is_correct, expected_updated_sample in zip( 
             self.sample_list, answer_is_correct_list, expected_updated_sample_list ):
@@ -60,7 +60,7 @@ class TestUpdateDataFrame(unittest.TestCase):
 
         expected_updated_sample_list = [
             ValueError("Cannot decrement an unexisting or perfect score."),
-            pd.Series( data=['test_question1', 'test_answer1', 100.*(1/10), 1, 10], index = COLUMNS) ]
+            pd.Series( data=['test_answer1', 'test_question1', 100.*(1/10), 1, 10], index = COLUMNS) ]
 
         for sample, expected_updated_sample in zip(self.sample_list, expected_updated_sample_list ):
             
