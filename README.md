@@ -26,7 +26,7 @@ Once done with rehearsing, progress can be saved by clicking the `Save as ...` b
 - `.txt`: for saving as plain list of translations, without statistics
 - `.csv`, `.xls(x)` and `.pkl`: for saving dictionary as tabular data, including statistics of practise session
 
-After providing a file name, the user is prompted by a pop up screen asking for an optional string of patterns that will be ignored in sorting the translation dictionary: ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png) Note that multiple patterns can be provided by separating them by the vertical bar or operator `|`, and that the ignore string may also be empty.
+After providing a file name, the user is prompted by a pop up screen asking for an optional string of patterns that will be ignored in sorting the translation dictionary: ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png) Note that multiple patterns can be provided by separating them by the 'or' operator `|`, and that the ignore string may also be empty.
 
 ### Updating dictionary
 
