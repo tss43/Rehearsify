@@ -10,6 +10,8 @@ from tkinter.messagebox import showinfo
 
 import pandas as pd
 
+from functools import partial
+
 from src.data_handling.file_handling import (
     read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, 
     validate_score_df, validate_ignore_str )
@@ -17,7 +19,7 @@ from src.translation_handling.sample_selecting import select_randomly_weighted_s
 from src.translation_handling.answer_handling import check_answer
 from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
 
-from src.misc.df_sorting import sort_df
+from src.misc.df_sorting import no_sort_df, random_sort_df, sortby_num_df, sortby_str_df
 from src.misc.find_sample import find_sample_from_question, find_sample_from_answer
 from src.misc.compute_statistics import compute_statistics
 
@@ -235,16 +237,9 @@ class RehearsifyGUI:
             filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"),
              ("Text files", "*.txt")] ) ): 
              
-             # sort score_df by answer, ignoring the regex obtained from the user
-            while (ignore_str := askstring(
-                title="Translation ordering for saving", 
-                prompt="Strings to ignore in sorting translations by answer (separated by '|'):" ) ) is None:
-                try:
-                    validate_ignore_str( ignore_str )
-                except ValueError as e: 
-                    print(f"error {e!r}")
-                    ignore_str = None
-            _score_df = sort_df( self.score_df, ignore_str )
+            self.open_sorting_popup()
+            sort_df_func = self.sorting_popup.sort_df_func
+            _score_df = sort_df_func( self.score_df )
             
             if filepath.endswith(".txt"):
                 save_as_dictionary_txtfile( filepath, _score_df )
@@ -256,6 +251,13 @@ class RehearsifyGUI:
                 _score_df.to_pickle(filepath)
             
             self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
+
+
+    def open_sorting_popup( self ):
+        """ Open the sorting pop up window. """
+        
+        self.sorting_popup = SortingPopUp( master=self.window )
+        self.window.wait_window(self.sorting_popup.top)
 
 
     def process_answer( self, event=None ):
@@ -388,6 +390,95 @@ class RehearsifyGUI:
         return update_dict     
     
 
+class SortingPopUp:
+    """ Class defining the sorting option pop up. """
+
+    def __init__( self, master ):
+        """ Initialise object with the following attributes. """
+        
+        self.top = tk.Toplevel(master)
+    
+        # defining widgets
+        self.lbl = tk.Label(self.top, text="""Preferred sorting order:""", justify = 'left', padx = 20)
+        self.entry_question=tk.Entry(self.top, state='disabled')
+        self.entry_answer=tk.Entry(self.top, state='disabled')
+
+        btn_var = tk.IntVar(value=-1)
+        btn_texts = [
+            "Sort in orginal order",
+            "Sort in random order",
+            "Sort by wrong percentage",
+            "Sort alphabetically on answer, ignoring strings (separated by '|'):",
+            "Sort alphabetically on question, ignoring strings (separated by '|'):" ]
+        n_btns = len(btn_texts)
+
+        self.radiobtns = [0]*n_btns
+        for val, button_text in enumerate(btn_texts):
+            self.radiobtns[val]=tk.Radiobutton(
+                self.top, 
+                text=button_text,
+                padx=20, 
+                variable=btn_var, 
+                value=val,
+                command=lambda e1=self.entry_answer, e2=self.entry_question, v=btn_var: self.btn_parsing(e1, e2, v) )
+
+        # placing popup widgets on grid
+        self.lbl.grid(row=1,column=1, sticky='W', padx=0, pady=1 )
+        self.radiobtns[0].grid(row=2, column=1, sticky='W', padx=0, pady=1 )
+        self.radiobtns[1].grid(row=3, column=1, sticky='W', padx=0, pady=1 )
+        self.radiobtns[2].grid(row=4, column=1, sticky='W', padx=0, pady=1 )
+        self.radiobtns[3].grid(row=5, column=1, sticky='W', padx=0, pady=1 )
+        self.entry_answer.grid(row=6, column=1, sticky='NSEW', padx=0, pady=1 )
+        self.radiobtns[4].grid(row=7, column=1, sticky='W', padx=0, pady=1 )
+        self.entry_question.grid(row=8, column=1, sticky='NSEW', padx=0, pady=1 )
+
+    #instance methods
+    def btn_parsing(self, e1, e2, v):
+        """ Parse the value yielded to v to obtain the appropriate sorting function, possibly further requiring a ignore string 
+        to be given. """
+
+        match v.get():
+            case 0:
+                self.sort_df_func = no_sort_df
+            case 1:
+                self.sort_df_func = random_sort_df
+            case 2:
+                self.sort_df_func = partial( sortby_num_df, sortby='weight_perc' )
+            case 3:
+                e1.configure(state='normal')
+                e2.configure(state='disabled')
+                self.obtain_ignore_str(e1)
+                self.sort_df_func = partial( sortby_str_df, sortby='answer', ignore_str=self.ignore_str )
+            case 4:
+                e1.configure(state='disabled')
+                e2.configure(state='normal')
+                self.obtain_ignore_str(e2)
+                self.sort_df_func = partial( sortby_str_df, sortby='question', ignore_str=self.ignore_str )
+        
+        # once we have obtained the right sorting function, exit the sorting popup
+        self.top.destroy()
+
+
+    def obtain_ignore_str(self, entry):
+        """ Obtain a valid ignore string, only moving on upon clicking 'enter'.  """
+        
+        self.str_is_entered = tk.BooleanVar(value=False)
+        self.ignore_str = None
+        while self.ignore_str is None:
+            try:
+                entry.bind( '<Return>', lambda event, e=entry: self.get_ignore_str(e) )    
+                self.top.wait_variable(self.str_is_entered)
+                validate_ignore_str( self.ignore_str )
+            except ValueError as err: 
+                print(f"error {err!r}")
+                self.ignore_str = None
+        
+
+    def get_ignore_str( self, entry ):
+        """ Get the ignore string from the entry widget, and flag that it was entered. """
+        
+        self.ignore_str = entry.get()
+        self.is_entered.set(True)
 
 
     

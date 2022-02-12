@@ -4,11 +4,30 @@ import pandas as pd
 
 import unidecode 
 
-def sort_df(score_df: pd.DataFrame, ignore_str: str) -> pd.DataFrame:
-    """ Sort the score df alphabetically by answer, ignoring the supplied characters. Do not reset index. """   
 
-    def reduce_series(ans: pd.Series) -> pd.Series:
-        """ Reduce a Series by ignoring the supplied characters and special characters and case. """
+def no_sort_df( df: pd.DataFrame ) -> pd.DataFrame:
+    """ Do not sort the DataFrame. """
+    
+    return df
+
+
+def random_sort_df( df: pd.DataFrame, seed=None ) -> pd.DataFrame:
+    """ Randomly rearrange the DataFrame. """
+    
+    return df.sample(frac=1, random_state=seed)
+
+
+def sortby_num_df( df: pd.DataFrame, sortby: str ) -> pd.DataFrame:
+    """ Sort the DataFrame alphabetically by a numerical col named sortby. Do not reset index. """
+    
+    return df.sort_values( by=sortby )
+
+
+def sortby_str_df(df: pd.DataFrame, sortby: str, ignore_str: str='') -> pd.DataFrame:
+    """ Sort the DataFrame alphabetically by a string col named sortby, ignoring the supplied characters. Do not reset index. """   
+
+    def reduce_series(ans: pd.Series[str], ignore_str: str) -> pd.Series[str]:
+        """ Reduce a string Series by ignoring the supplied characters and special characters and case. """
         
         ans = ans.str.replace( pat=fr'{ignore_str}', repl='', regex=True )
         ans = ans.apply( unidecode.unidecode )
@@ -16,6 +35,6 @@ def sort_df(score_df: pd.DataFrame, ignore_str: str) -> pd.DataFrame:
 
         return ans
 
-    score_df = score_df.sort_values( by='answer', key=reduce_series )
+    df = df.sort_values( by=sortby, key=lambda str=ignore_str: reduce_series(str) )
 
-    return score_df
+    return df

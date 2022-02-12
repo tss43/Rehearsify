@@ -56,3 +56,10 @@ Some further command line functionality to query a translation dictionary is als
 ```
 
 <!-- comments -->
+
+## TO-DO
+
+- [x] finish descriptions & commenting
+- [ ] write extra tests sorting functions & popup window
+- [ ] update README.md
+- [ ] clean up code
