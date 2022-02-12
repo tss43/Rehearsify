@@ -397,9 +397,13 @@ class SortingPopUp:
         """ Initialise object with the following attributes. """
         
         self.top = tk.Toplevel(master)
-    
+        self.top.title("Translation order for saving")
+
+        # set default sorting function
+        self.sort_df_func = no_sort_df
+
         # defining widgets
-        self.lbl = tk.Label(self.top, text="""Preferred sorting order:""", justify = 'left', padx = 20)
+        self.lbl = tk.Label(self.top, text="""Preferred sorting order:""", justify = 'left')
         self.entry_question=tk.Entry(self.top, state='disabled')
         self.entry_answer=tk.Entry(self.top, state='disabled')
 
@@ -420,7 +424,7 @@ class SortingPopUp:
                 padx=20, 
                 variable=btn_var, 
                 value=val,
-                command=lambda e1=self.entry_answer, e2=self.entry_question, v=btn_var: self.btn_parsing(e1, e2, v) )
+                command=lambda: self.btn_parsing(self.entry_answer, self.entry_question, btn_var) )
 
         # placing popup widgets on grid
         self.lbl.grid(row=1,column=1, sticky='W', padx=0, pady=1 )
@@ -466,7 +470,7 @@ class SortingPopUp:
         self.ignore_str = None
         while self.ignore_str is None:
             try:
-                entry.bind( '<Return>', lambda event, e=entry: self.get_ignore_str(e) )    
+                entry.bind( '<Return>', self.get_ignore_str(entry=entry) )    
                 self.top.wait_variable(self.str_is_entered)
                 validate_ignore_str( self.ignore_str )
             except ValueError as err: 
@@ -474,11 +478,11 @@ class SortingPopUp:
                 self.ignore_str = None
         
 
-    def get_ignore_str( self, entry ):
+    def get_ignore_str( self, entry, event=None ):
         """ Get the ignore string from the entry widget, and flag that it was entered. """
         
         self.ignore_str = entry.get()
-        self.is_entered.set(True)
+        self.str_is_entered.set(True)
 
 
     
