@@ -14,7 +14,7 @@ from functools import partial
 
 from src.data_handling.file_handling import (
     read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, 
-    validate_score_df, validate_ignore_str )
+    validate_score_df, validate_regex_str )
 from src.translation_handling.sample_selecting import select_randomly_weighted_sample
 from src.translation_handling.answer_handling import check_answer
 from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
@@ -61,7 +61,7 @@ class RehearsifyGUI:
         def define_widgets( self ):
             """ Define the widgets. """
             
-            self.button_frame = tk.Frame( self.window, relief=tk.RAISED, bd=2 )
+            self.button_frame = tk.Frame( self.window, relief='raised', bd=2 )
             self.btn_open = tk.Button( self.button_frame, text="Open", command=self.open_file )
             self.btn_update = tk.Button( self.button_frame, text="Update with...", command=self.update_file )
             self.btn_save = tk.Button( self.button_frame, text="Save as...", command=self.save_file )
@@ -70,11 +70,11 @@ class RehearsifyGUI:
             self.btn_dictionary_stats = tk.Button( 
                 self.button_frame, text="Dict statistics", command=self.display_dictionary_stats )
             
-            self.question_answer_frame = tk.Frame( self.window, relief=tk.RAISED, bd=2 )
+            self.question_answer_frame = tk.Frame( self.window, relief='raised', bd=2 )
             self.question_prompt = tk.Label( self.question_answer_frame, textvariable=self.question )
             self.equal_sign = tk.Label( self.question_answer_frame, text=" = " )
             self.answer_entry = tk.Entry( self.question_answer_frame, textvariable=self.user_answer  )
-            self.answer_entry.bind( '<Return>', self.process_answer )    
+            self.answer_entry.bind( '<Return>', lambda event: self.process_answer() )    
             self.go_btn = tk.Button( self.question_answer_frame, text="Go", command = self.process_answer )
 
             self.log = ttk.Treeview( self.window, columns=DISPLAY_COLUMNS )
@@ -260,7 +260,7 @@ class RehearsifyGUI:
         self.window.wait_window(self.sorting_popup.top)
 
 
-    def process_answer( self, event=None ):
+    def process_answer( self ):
         """Accept user input and process the answer, updating the score_df accordingly. Finally update the 
         prompt with a newly selected answer question. """
 
@@ -390,6 +390,7 @@ class RehearsifyGUI:
         return update_dict     
     
 
+
 class SortingPopUp:
     """ Class defining the sorting option pop up. """
 
@@ -412,8 +413,8 @@ class SortingPopUp:
             "Sort in orginal order",
             "Sort in random order",
             "Sort by wrong percentage",
-            "Sort alphabetically on answer, ignoring strings (separated by '|'):",
-            "Sort alphabetically on question, ignoring strings (separated by '|'):" ]
+            "Sort alphabetically on answer, ignoring patterns (separated by '|'):",
+            "Sort alphabetically on question, ignoring patterns (separated by '|'):" ]
         n_btns = len(btn_texts)
 
         self.radiobtns = [0]*n_btns
@@ -426,15 +427,26 @@ class SortingPopUp:
                 value=val,
                 command=lambda: self.btn_parsing(self.entry_answer, self.entry_question, btn_var) )
 
+        self.button_frame = tk.Frame( self.top, relief='raised', bd=2 )
+        self.btn_ok = tk.Button( self.button_frame, text="OK", state='disabled', command=self.top.destroy )
+        self.btn_cancel = tk.Button( self.button_frame, text="Cancel", command=self.top.destroy )
+
         # placing popup widgets on grid
-        self.lbl.grid(row=1,column=1, sticky='W', padx=0, pady=1 )
-        self.radiobtns[0].grid(row=2, column=1, sticky='W', padx=0, pady=1 )
-        self.radiobtns[1].grid(row=3, column=1, sticky='W', padx=0, pady=1 )
-        self.radiobtns[2].grid(row=4, column=1, sticky='W', padx=0, pady=1 )
-        self.radiobtns[3].grid(row=5, column=1, sticky='W', padx=0, pady=1 )
-        self.entry_answer.grid(row=6, column=1, sticky='NSEW', padx=0, pady=1 )
-        self.radiobtns[4].grid(row=7, column=1, sticky='W', padx=0, pady=1 )
-        self.entry_question.grid(row=8, column=1, sticky='NSEW', padx=0, pady=1 )
+        self.lbl.grid(row=1,column=1, sticky='W', padx=0, pady=1)
+        self.radiobtns[0].grid(row=2, column=1, sticky='W', padx=0, pady=1)
+        self.radiobtns[1].grid(row=3, column=1, sticky='W', padx=0, pady=1)
+        self.radiobtns[2].grid(row=4, column=1, sticky='W', padx=0, pady=1)
+        self.radiobtns[3].grid(row=5, column=1, sticky='W', padx=0, pady=1)
+        self.entry_answer.grid(row=6, column=1, sticky='NSEW', padx=0, pady=1)
+        self.radiobtns[4].grid(row=7, column=1, sticky='W', padx=0, pady=1)
+        self.entry_question.grid(row=8, column=1, sticky='NSEW', padx=0, pady=1)
+        
+        self.button_frame.grid(row=9, column=1, sticky='NSEW', padx=0, pady=1)
+        self.button_frame.columnconfigure([1,3], weight=0)
+        self.button_frame.columnconfigure([0,2,4], weight=1)
+        self.btn_ok.grid(row=0, column=1, padx=5)
+        self.btn_cancel.grid(row=0, column=3, padx=5)
+
 
     #instance methods
     def btn_parsing(self, e1, e2, v):
@@ -444,23 +456,39 @@ class SortingPopUp:
         match v.get():
             case 0:
                 self.sort_df_func = no_sort_df
+                self.btn_ok.configure(state='normal')
+                self.top.bind( '<Return>', lambda event: self.top.destroy() )
             case 1:
                 self.sort_df_func = random_sort_df
+                self.btn_ok.configure(state='normal')
+                self.top.bind( '<Return>', lambda event: self.top.destroy() )
             case 2:
-                self.sort_df_func = partial( sortby_num_df, sortby='weight_perc' )
+                self.sort_df_func = partial( sortby_num_df, sortby='wrong_perc' )
+                self.btn_ok.configure(state='normal')
+                self.top.bind( '<Return>', lambda event: self.top.destroy() )
             case 3:
                 e1.configure(state='normal')
                 e2.configure(state='disabled')
+                
+                self.sort_df_func = partial( sortby_str_df, sortby='answer' )
+                self.btn_ok.configure(state='normal')
+                self.top.bind( '<Return>', lambda event: self.top.destroy() )
+                
                 self.obtain_ignore_str(e1)
                 self.sort_df_func = partial( sortby_str_df, sortby='answer', ignore_str=self.ignore_str )
+                self.top.destroy()
             case 4:
                 e1.configure(state='disabled')
                 e2.configure(state='normal')
+                
+                self.sort_df_func = partial( sortby_str_df, sortby='question' )
+                self.btn_ok.configure(state='normal')
+                self.top.bind( '<Return>', lambda event: self.top.destroy() )
+
                 self.obtain_ignore_str(e2)
                 self.sort_df_func = partial( sortby_str_df, sortby='question', ignore_str=self.ignore_str )
-        
-        # once we have obtained the right sorting function, exit the sorting popup
-        self.top.destroy()
+                self.top.destroy()
+    
 
 
     def obtain_ignore_str(self, entry):
@@ -470,15 +498,15 @@ class SortingPopUp:
         self.ignore_str = None
         while self.ignore_str is None:
             try:
-                entry.bind( '<Return>', self.get_ignore_str(entry=entry) )    
+                entry.bind( '<Return>', lambda event: self.get_ignore_str(entry=entry) )    
                 self.top.wait_variable(self.str_is_entered)
-                validate_ignore_str( self.ignore_str )
+                validate_regex_str( self.ignore_str )
             except ValueError as err: 
                 print(f"error {err!r}")
                 self.ignore_str = None
         
 
-    def get_ignore_str( self, entry, event=None ):
+    def get_ignore_str( self, entry  ):
         """ Get the ignore string from the entry widget, and flag that it was entered. """
         
         self.ignore_str = entry.get()
