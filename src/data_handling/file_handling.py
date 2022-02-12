@@ -77,8 +77,8 @@ def validate_score_df(score_df: pd.DataFrame):
         raise ValueError(f"Duplicate question entries are:\n {duplicates_set}.")
 
 
-def validate_ignore_str(ignore_str: str):
-    """Validate an ignore_str string given by the user for proper regex purposes."""
+def validate_regex_str(regex_str: str):
+    """Validate a string given by the user for proper regex purposes."""
 
-    if '\\' in ignore_str:
+    if '\\' in regex_str:
         raise ValueError("Ignore string cannot contain '\\'.")
