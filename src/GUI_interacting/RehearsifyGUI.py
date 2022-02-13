@@ -7,11 +7,11 @@ import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
-from typing import Callable
 
 import pandas as pd
-
 from functools import partial
+
+from typing import Callable
 
 from src.data_handling.file_handling import (
     read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, 

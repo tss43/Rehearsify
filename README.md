@@ -26,7 +26,7 @@ Once done with rehearsing, progress can be saved by clicking the `Save as ...` b
 - `.txt`: for saving as plain list of translations, without statistics
 - `.csv`, `.xls(x)` and `.pkl`: for saving dictionary as tabular data, including statistics of practise session
 
-After providing a file name, the user is prompted by a pop up screen asking for an optional string of patterns that will be ignored in sorting the translation dictionary: ![Ignore str in sorting screen](./docs/Ignore_str_in_sorting_screen.png) Note that multiple patterns can be provided by separating them by the 'or' operator `|`, and that the ignore string may also be empty.
+After providing a file name, the user is prompted by a pop up screen asking for the way the saved translation dictionary should be sorted: ![sorting pop up](./docs/Sorting_popup_window.png) The options that specify an alphabetical ordering on a specific column furthermore allow the user to enter patterns that will be ignored in the sorting. Note that multiple patterns can be provided by separating them by the 'or' operator `|`, and that the ignore string may also be empty.
 
 ### Updating dictionary
 
@@ -61,6 +61,6 @@ Some further command line functionality to query a translation dictionary is als
 
 - [x] finish descriptions & commenting
 - [x] add 'ok' and 'cancel' buttons to sorting popup
-- [] write extra tests sorting functions & popup window
-- [] update README.md
+- [x] write extra tests sorting functions & popup window
+- [x] update README.md
 - [] clean up code
