@@ -9,7 +9,7 @@ from itertools import product as cartprod
 import tkinter as tk
 
 from src.translation_handling.answer_handling import check_answer
-from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI
+from src.GUI_interacting.RehearsifyGUI import RehearsifyGUI, SortingPopUp
 
 
 from src.constants import COLUMNS, DISPLAY_COLUMNS
@@ -23,12 +23,12 @@ class TestRehearsifyGUI(unittest.TestCase):
         self.assertTrue(testBool, msg=f'obj lacking an attribute. {obj=}, {intendedAttr=}')
 
     def setUp(self):
-        """ Initialise attributes available for tests in class. """
+        """ Hook method for setting up the test fixture before exercising it. """
         self.root = tk.Tk()
         self.app = RehearsifyGUI(window=self.root)
 
     def tearDown(self):
-        """ Deinitialise attributes available for tests in class. """
+        """ Hook method for deconstructing the test fixture after testing it. """
         self.root.destroy()
         self.app = None
         
@@ -60,9 +60,9 @@ class TestRehearsifyGUI(unittest.TestCase):
 
         for method in [
             'initialise_var_attributes', 'initialise_GUI', 'initialise_log', 'open_file', 'update_file', 'save_file', 
-            'process_answer', 'lookup_question', 'lookup_answer', 'display_dictionary_stats', 'mark_correct' ]:
+            'get_sort_func_from_sorting_popup', 'process_answer', 'lookup_question', 'lookup_answer', 'display_dictionary_stats', 
+            'mark_correct' ]:
             self.assertHasAttr( self.app, method )
-
             
 
 class TestLogInsertionDict(unittest.TestCase):
@@ -88,5 +88,37 @@ class TestLogInsertionDict(unittest.TestCase):
                 self.assertEqual( list( test_dict.keys() ), expected_keys )
 
 
+class TestSortingPopUp(unittest.TestCase):
+    """ Tests on SortingPopUp methods. """
 
-# [TSS43] TODO: implement class TestSortingPopup(unittest.TestCase):
+    def assertHasAttr(self, obj, intendedAttr):
+        """ Custom assert method to establish if instance has attribute. """
+        testBool = hasattr(obj, intendedAttr)
+        self.assertTrue(testBool, msg=f'obj lacking an attribute. {obj=}, {intendedAttr=}')
+
+    def setUp(self):
+        """ Hook method for setting up the test fixture before exercising it. """
+        self.master = tk.Tk()
+        self.popup = SortingPopUp(master=self.master)
+
+    def tearDown(self):
+        """ Hook method for deconstructing the test fixture after testing it. """
+        self.master.destroy()
+        self.popup = None
+
+    def test_initialise_var_attributes(self):
+        """ Testing if app instance has appropriate attributes. """
+
+        for attr in [
+            'top', 'sort_df_func', 'lbl', 'entry_question', 'entry_answer', 'radiobtns', 'btn_frame', 'btn_ok', 'btn_cancel']:
+            self.assertHasAttr( self.popup, attr )
+
+    def test_methods(self):
+        """ Testing if app instance has appropriate methods. """
+
+        for method in [
+            'btn_parsing', 'get_ignore_str_from_entry', 'get_str_from_entry' ]:
+            self.assertHasAttr( self.popup, method )
+
+    
+

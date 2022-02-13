@@ -7,6 +7,7 @@ import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
+from typing import Callable
 
 import pandas as pd
 
@@ -252,7 +253,7 @@ class RehearsifyGUI:
             self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
 
 
-    def get_sort_func_from_sorting_popup( self ) -> function:
+    def get_sort_func_from_sorting_popup( self ) -> Callable[[pd.DataFrame], pd.DataFrame]:
         """ Open the sorting pop up window. """
         
         self.sorting_popup = SortingPopUp( master=self.window )
@@ -430,9 +431,9 @@ class SortingPopUp:
                 value=val,
                 command=lambda: self.btn_parsing(self.entry_answer, self.entry_question, btn_var) )
 
-        self.button_frame = tk.Frame( self.top, relief='raised', bd=2 )
-        self.btn_ok = tk.Button( self.button_frame, text="OK", state='disabled', command=self.top.destroy )
-        self.btn_cancel = tk.Button( self.button_frame, text="Cancel", command=self.top.destroy )
+        self.btn_frame = tk.Frame( self.top, relief='raised', bd=2 )
+        self.btn_ok = tk.Button( self.btn_frame, text="OK", state='disabled', command=self.top.destroy )
+        self.btn_cancel = tk.Button( self.btn_frame, text="Cancel", command=self.top.destroy )
 
         # placing popup widgets on grid
         self.lbl.grid(row=1,column=1, sticky='W', padx=0, pady=1)
@@ -444,9 +445,9 @@ class SortingPopUp:
         self.radiobtns[4].grid(row=7, column=1, sticky='W', padx=0, pady=1)
         self.entry_question.grid(row=8, column=1, sticky='NSEW', padx=0, pady=1)
         
-        self.button_frame.grid(row=9, column=1, sticky='NSEW', padx=0, pady=1)
-        self.button_frame.columnconfigure([1,3], weight=0)
-        self.button_frame.columnconfigure([0,2,4], weight=1)
+        self.btn_frame.grid(row=9, column=1, sticky='NSEW', padx=0, pady=1)
+        self.btn_frame.columnconfigure([1,3], weight=0)
+        self.btn_frame.columnconfigure([0,2,4], weight=1)
         self.btn_ok.grid(row=0, column=1, padx=5)
         self.btn_cancel.grid(row=0, column=3, padx=5)
 
