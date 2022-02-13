@@ -404,14 +404,12 @@ class SortingPopUp:
         self.top = tk.Toplevel(master)
         self.top.title("Translation order for saving")
 
-        # set default sorting function
-        self.sort_df_func = no_sort_df
-
         # defining widgets
         self.lbl = tk.Label(self.top, text="""Preferred sorting order:""", justify = 'left')
         self.entry_question=tk.Entry(self.top, state='disabled')
         self.entry_answer=tk.Entry(self.top, state='disabled')
 
+        # set default radiobutton 
         btn_var = tk.IntVar(value=0)
         btn_texts = [
             "Sort in orginal order",
@@ -429,10 +427,19 @@ class SortingPopUp:
                 padx=20, 
                 variable=btn_var, 
                 value=val,
-                command=lambda: self.btn_parsing(e1=self.entry_answer, e2=self.entry_question, v=btn_var) )
+                command=lambda: self.entry_activation(v=btn_var, e1=self.entry_answer, e2=self.entry_question)  )
 
         self.btn_frame = tk.Frame( self.top, relief='raised', bd=2 )
-        self.btn_ok = tk.Button( self.btn_frame, text="OK", state='disabled', command=self.top.destroy )
+        
+         # immediately accept answer upon clicking radiobutton or pressing enter
+        self.btn_ok = tk.Button( 
+            self.btn_frame, 
+            text="OK", 
+            command=lambda: self.btn_parsing(v=btn_var, e1=self.entry_answer, e2=self.entry_question) )
+        self.top.bind( '<Return>', lambda event: self.btn_parsing(v=btn_var, e1=self.entry_answer, e2=self.entry_question) )
+
+        # set default sorting function if cancelled (through button or manually)
+        self.sort_df_func = no_sort_df
         self.btn_cancel = tk.Button( self.btn_frame, text="Cancel", command=self.top.destroy )
 
         # placing popup widgets on grid
@@ -452,75 +459,67 @@ class SortingPopUp:
         self.btn_cancel.grid(row=0, column=3, padx=5)
 
 
+
     #instance methods
-    def btn_parsing(self, e1, e2, v):
-        """ Parse the value yielded to v to obtain the appropriate sorting function, possibly further requiring a ignore string 
-        to be given. """
+    def entry_activation(self, v, e1, e2):
+        """ Activate the appropriate entry widget corresponding to the value v. """
+
+        match v.get():           
+            case 3:
+                e1.configure(state='normal')
+                e2.configure(state='disabled')
+            case 4:
+                e1.configure(state='disabled')
+                e2.configure(state='normal')
+            case _:
+                e1.configure(state='disabled')
+                e2.configure(state='disabled')
+
+
+
+    def btn_parsing(self, v, e1=None, e2=None ):
+        """ Parse the value yielded to obtain the appropriate sorting function, possibly further requiring a ignore string 
+        to be given in the entries. """
 
         match v.get():
             case 0:
                 self.sort_df_func = no_sort_df
-                self.btn_ok.configure(state='normal')
-                self.top.bind( '<Return>', lambda event: self.top.destroy() )
             case 1:
                 self.sort_df_func = random_sort_df
-                self.btn_ok.configure(state='normal')
-                self.top.bind( '<Return>', lambda event: self.top.destroy() )
             case 2:
                 self.sort_df_func = partial( sortby_num_df, sortby='wrong_perc' )
-                self.btn_ok.configure(state='normal')
-                self.top.bind( '<Return>', lambda event: self.top.destroy() )
-            case 3:
-                e1.configure(state='normal')
-                e2.configure(state='disabled')
-                
-                self.sort_df_func = partial( sortby_str_df, sortby='answer' )
-                self.btn_ok.configure(state='normal')
-                self.top.bind( '<Return>', lambda event: self.top.destroy() )
-                
-                ignore_str=self.get_ignore_str_from_entry(e1)
+            case 3:                             
+                ignore_str = self.get_valid_str_from_entry(e1)
                 self.sort_df_func = partial( sortby_str_df, sortby='answer', ignore_str=ignore_str )
-                self.top.destroy()
-            case 4:
-                e1.configure(state='disabled')
-                e2.configure(state='normal')
-                
-                self.sort_df_func = partial( sortby_str_df, sortby='question' )
-                self.btn_ok.configure(state='normal')
-                self.top.bind( '<Return>', lambda event: self.top.destroy() )
-
-                ignore_str=self.get_ignore_str_from_entry(e2)
+            case 4:               
+                ignore_str = self.get_valid_str_from_entry(e2)
                 self.sort_df_func = partial( sortby_str_df, sortby='question', ignore_str=ignore_str )
-                self.top.destroy()
+        
+        self.top.destroy()
+                
     
 
 
-    def get_ignore_str_from_entry(self, entry) -> str:
-        """ Get a valid ignore string from the entry widget upon clicking 'enter'.  """
+    def get_valid_str_from_entry(self, entry) -> str:
+        """ Get a valid regex string from the entry widget upon clicking 'enter'.  """
         
-        self.str = None
-        self.str_is_entered = tk.BooleanVar(value=False)
-        while self.str is None:
+        entry_str = None
+        while entry_str is None:
             try:
-                entry.bind( '<Return>', lambda event: self.get_str_from_entry(entry=entry) )    
-                self.top.wait_variable(self.str_is_entered)
-                validate_regex_str( self.str )
+                entry_str = entry.get()
+                validate_regex_str( entry_str )
             except ValueError as err: 
                 print(f"error {err!r}")
-                self.str = None
+                entry_str = None
+                
+                entry.delete(0, 'end')
+                str_is_entered = tk.BooleanVar(value=False)
+                entry.bind( '<Return>', lambda event: str_is_entered.set(True) )    
+                self.top.wait_variable(str_is_entered)
+                str_is_entered = None
+               
+        return entry_str
         
-        ignore_str = self.str
-        self.str = None
-        self.str_is_entered = None
-
-        return ignore_str
-
-
-    def get_str_from_entry(self, entry):
-        """ Get a string from the entry widget, and flag that it was entered. """
-        
-        self.ignore_str = entry.get()
-        self.str_is_entered.set(True)
 
 
     

@@ -117,7 +117,7 @@ class TestSortingPopUp(unittest.TestCase):
         """ Testing if app instance has appropriate methods. """
 
         for method in [
-            'btn_parsing', 'get_ignore_str_from_entry', 'get_str_from_entry' ]:
+            'entry_activation', 'btn_parsing', 'get_valid_str_from_entry' ]:
             self.assertHasAttr( self.popup, method )
 
     

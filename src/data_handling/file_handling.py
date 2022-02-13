@@ -1,5 +1,6 @@
 # data_handling/file_handling.py
 
+import re
 
 import numpy as np
 import pandas as pd
@@ -80,5 +81,9 @@ def validate_score_df(score_df: pd.DataFrame):
 def validate_regex_str(regex_str: str):
     """Validate a string given by the user for proper regex purposes."""
 
-    if '\\' in regex_str:
-        raise ValueError("Ignore string cannot contain '\\'.")
+    for pat in regex_str.split('|'):
+        try:
+            re.compile(pat)
+        except re.error:
+            raise ValueError(f"Ignore string cannot contain '{pat}'.")
+        
