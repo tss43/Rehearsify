@@ -98,10 +98,10 @@ class RehearsifyGUI:
             self.question_answer_frame.grid(row=0, column=1, sticky='NSEW' )
             self.question_answer_frame.columnconfigure([0,1,3], weight=0)
             self.question_answer_frame.columnconfigure(2, weight=1)
-            self.question_prompt.grid(row=0, column=0, sticky='NSEW', padx=1, pady=15)
-            self.equal_sign.grid(row=0, column=1, sticky='NSEW', padx=1, pady=15)
-            self.answer_entry.grid(row=0, column=2, sticky='NSEW', padx=1, pady=15)
-            self.go_btn.grid(row=0, column=3, sticky='NSEW', padx=1, pady=15)
+            self.question_prompt.grid(row=0, column=0, sticky='NSEW', padx=0, pady=15)
+            self.equal_sign.grid(row=0, column=1, sticky='NSEW', padx=0, pady=15)
+            self.answer_entry.grid(row=0, column=2, sticky='NSEW', padx=0, pady=15)
+            self.go_btn.grid(row=0, column=3, sticky='NSEW', padx=0, pady=15)
     
             self.log.grid(row=1,column=1, sticky='NSEW', padx=5, pady=1 )
         
