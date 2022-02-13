@@ -237,8 +237,7 @@ class RehearsifyGUI:
             filetypes=[("Pickle files", "*.pkl"), ("CSV files", "*.csv"), ("XLS files", "*.xls"), ("XLSX files", "*.xlsx"),
              ("Text files", "*.txt")] ) ): 
              
-            self.open_sorting_popup()
-            sort_df_func = self.sorting_popup.sort_df_func
+            sort_df_func = self.get_sort_func_from_sorting_popup()           
             _score_df = sort_df_func( self.score_df )
             
             if filepath.endswith(".txt"):
@@ -253,11 +252,15 @@ class RehearsifyGUI:
             self.window.title(f"Rehearsify - {os.path.basename(filepath)}")
 
 
-    def open_sorting_popup( self ):
+    def get_sort_func_from_sorting_popup( self ) -> function:
         """ Open the sorting pop up window. """
         
         self.sorting_popup = SortingPopUp( master=self.window )
         self.window.wait_window(self.sorting_popup.top)
+        sort_df_func = self.sorting_popup.sort_df_func
+        self.sorting_popup = None
+
+        return sort_df_func
 
 
     def process_answer( self ):
@@ -408,7 +411,7 @@ class SortingPopUp:
         self.entry_question=tk.Entry(self.top, state='disabled')
         self.entry_answer=tk.Entry(self.top, state='disabled')
 
-        btn_var = tk.IntVar(value=-1)
+        btn_var = tk.IntVar(value=0)
         btn_texts = [
             "Sort in orginal order",
             "Sort in random order",
@@ -474,8 +477,8 @@ class SortingPopUp:
                 self.btn_ok.configure(state='normal')
                 self.top.bind( '<Return>', lambda event: self.top.destroy() )
                 
-                self.obtain_ignore_str(e1)
-                self.sort_df_func = partial( sortby_str_df, sortby='answer', ignore_str=self.ignore_str )
+                ignore_str=self.get_ignore_str_from_entry(e1)
+                self.sort_df_func = partial( sortby_str_df, sortby='answer', ignore_str=ignore_str )
                 self.top.destroy()
             case 4:
                 e1.configure(state='disabled')
@@ -485,28 +488,34 @@ class SortingPopUp:
                 self.btn_ok.configure(state='normal')
                 self.top.bind( '<Return>', lambda event: self.top.destroy() )
 
-                self.obtain_ignore_str(e2)
-                self.sort_df_func = partial( sortby_str_df, sortby='question', ignore_str=self.ignore_str )
+                ignore_str=self.get_ignore_str_from_entry(e2)
+                self.sort_df_func = partial( sortby_str_df, sortby='question', ignore_str=ignore_str )
                 self.top.destroy()
     
 
 
-    def obtain_ignore_str(self, entry):
+    def get_ignore_str_from_entry(self, entry) -> str:
         """ Obtain a valid ignore string, only moving on upon clicking 'enter'.  """
         
+        self.str = None
         self.str_is_entered = tk.BooleanVar(value=False)
-        self.ignore_str = None
-        while self.ignore_str is None:
+        while self.str is None:
             try:
-                entry.bind( '<Return>', lambda event: self.get_ignore_str(entry=entry) )    
+                entry.bind( '<Return>', lambda event: self.get_str_from_entry(entry=entry) )    
                 self.top.wait_variable(self.str_is_entered)
-                validate_regex_str( self.ignore_str )
+                validate_regex_str( self.str )
             except ValueError as err: 
                 print(f"error {err!r}")
-                self.ignore_str = None
+                self.str = None
         
+        ignore_str = self.str
+        self.str = None
+        self.str_is_entered = None
 
-    def get_ignore_str( self, entry  ):
+        return ignore_str
+
+
+    def get_str_from_entry(self, entry):
         """ Get the ignore string from the entry widget, and flag that it was entered. """
         
         self.ignore_str = entry.get()
