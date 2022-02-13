@@ -429,7 +429,7 @@ class SortingPopUp:
                 padx=20, 
                 variable=btn_var, 
                 value=val,
-                command=lambda: self.btn_parsing(self.entry_answer, self.entry_question, btn_var) )
+                command=lambda: self.btn_parsing(e1=self.entry_answer, e2=self.entry_question, v=btn_var) )
 
         self.btn_frame = tk.Frame( self.top, relief='raised', bd=2 )
         self.btn_ok = tk.Button( self.btn_frame, text="OK", state='disabled', command=self.top.destroy )
@@ -496,7 +496,7 @@ class SortingPopUp:
 
 
     def get_ignore_str_from_entry(self, entry) -> str:
-        """ Obtain a valid ignore string, only moving on upon clicking 'enter'.  """
+        """ Get a valid ignore string from the entry widget upon clicking 'enter'.  """
         
         self.str = None
         self.str_is_entered = tk.BooleanVar(value=False)
@@ -517,7 +517,7 @@ class SortingPopUp:
 
 
     def get_str_from_entry(self, entry):
-        """ Get the ignore string from the entry widget, and flag that it was entered. """
+        """ Get a string from the entry widget, and flag that it was entered. """
         
         self.ignore_str = entry.get()
         self.str_is_entered.set(True)
