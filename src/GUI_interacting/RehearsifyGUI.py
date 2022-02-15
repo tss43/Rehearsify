@@ -14,8 +14,7 @@ from functools import partial
 from typing import Callable
 
 from src.data_handling.file_handling import (
-    read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile,
-    validate_score_df, validate_regex_str)
+    read_dictionary_txtfile, update_with_df, save_as_dictionary_txtfile, validate_score_df, validate_regex_str)
 from src.translation_handling.sample_selecting import select_randomly_weighted_sample
 from src.translation_handling.answer_handling import check_answer
 from src.translation_handling.update_sample import add_correct_answer, update_sample_score, decrement_sample_wrong_score
