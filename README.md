@@ -13,7 +13,7 @@ The best way to access the GUI is to call it from the command line by invoking `
 - `.txt`: for supplying a _new_ translation dictionary to practise. Every line, representing a single translation, should be of the form 'question1'; 'question2'; ... = 'answer1', 'answer2', answer', ...
 - `.csv`, `.xls(x)` and `.pkl`: for continuing with statistics of last practise session
 
-An snapshot of a translation dictionary .txt looks like: ![Example dictionary txtfile screen](./docs/Example_dictionary_txtfile.png)
+An snapshot of a translation dictionary `.txt` looks like: ![Example dictionary txtfile screen](./docs/Example_dictionary_txtfile.png)
 
 ### Rehearsing translations
 
