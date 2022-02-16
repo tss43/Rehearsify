@@ -496,7 +496,7 @@ class SortingPopUp:
                 e1.configure(state='disabled')
                 e2.configure(state='disabled')
 
-    def btn_parsing(self, v, e1=None, e2=None):
+    def btn_parsing(self, v:int, e1:tk.Entry=None, e2:tk.Entry=None):
         """ Parse the value yielded to obtain the appropriate sorting function, possibly further requiring a ignore string 
         to be given in the entries. """
 
@@ -518,7 +518,7 @@ class SortingPopUp:
 
         self.top.destroy()
 
-    def get_valid_str_from_entry(self, entry) -> str:
+    def get_valid_str_from_entry(self, entry: tk.Entry) -> str:
         """ Get a valid regex string from the entry widget upon clicking 'enter'.  """
 
         entry_str = None
