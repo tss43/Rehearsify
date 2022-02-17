@@ -482,7 +482,7 @@ class SortingPopUp:
 
     # instance methods
 
-    def entry_activation(self, v, e1, e2):
+    def entry_activation(self, v:int, e1:tk.Entry, e2:tk.Entry):
         """ Activate the appropriate entry widget corresponding to the value v. """
 
         match v.get():
